@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=68 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
 [ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/sine.gdshader" id="2_iywne"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/source.gd" id="4_u5sy4"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/filter.gd" id="5_iywne"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/sensor.gd" id="6_p57ef"]
+[ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/camera.gd" id="7_u5sy4"]
 
 [sub_resource type="SystemFont" id="SystemFont_p57ef"]
 
@@ -522,14 +523,13 @@ region = Rect2(64, 96, 32, 32)
 script = ExtResource("1_lbhrr")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-offset = Vector2(-160, -90)
-transform = Transform2D(1, 0, 0, 1, -160, -90)
-follow_viewport_enabled = true
 
 [node name="SensorReadout" type="Label" parent="CanvasLayer"]
 unique_name_in_owner = true
-offset_right = 160.0
-offset_bottom = 40.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 168.0
+offset_bottom = 48.0
 text = "Test"
 label_settings = SubResource("LabelSettings_p57ef")
 
@@ -650,12 +650,14 @@ mesh = SubResource("PlaneMesh_pf7vy")
 [node name="GroundTiles" type="TileMapLayer" parent="."]
 unique_name_in_owner = true
 y_sort_enabled = true
+position = Vector2(160, 88)
 tile_map_data = PackedByteArray("AAD8//3/AAAAAAAAAAD8//7/AAAAAAAAAAD8////AAAAAAAAAAD8/wAAAAAAAAAAAAD8/wEAAAAAAAAAAAD8/wIAAAAAAAAAAAD8/wMAAAAAAAAAAAD8/wQAAAAAAAAAAAD9//3/AAAAAAAAAAD9//7/AAAAAAAAAAD9////AAAAAAAAAAD9/wAAAAAAAAAAAAD9/wEAAAAAAAAAAAD9/wIAAAAAAAAAAAD9/wMAAAAAAAAAAAD9/wQAAAAAAAAAAAD+//3/AAAAAAAAAAD+//7/AAAAAAAAAAD+////AAAAAAAAAAD+/wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAAAAAD+/wQAAAAAAAAAAAD///3/AAAAAAAAAAD///7/AAAAAAAAAAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAD//wQAAAAAAAAAAAAAAP3/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAABAP3/AAAAAAAAAAABAP7/AAAAAAAAAAABAP//AAAAAAAAAAABAAAAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAP3/AAAAAAAAAAACAP7/AAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAADAP3/AAAAAAAAAAADAP7/AAAAAAAAAAADAP//AAAAAAAAAAADAAAAAAAAAAAAAAADAAEAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAD7//z/AAAAAAAAAAD7//3/AAAAAAAAAAD7//7/AAAAAAAAAAD7////AAAAAAAAAAD7/wAAAAAAAAAAAAD7/wEAAAAAAAAAAAD7/wIAAAAAAAAAAAD7/wMAAAAAAAAAAAD7/wQAAAAAAAAAAAD8//z/AAAAAAAAAAD9//z/AAAAAAAAAAD+//z/AAAAAAAAAAD///z/AAAAAAAAAAAAAPz/AAAAAAAAAAABAPz/AAAAAAAAAAACAPz/AAAAAAAAAAADAPz/AAAAAAAAAAA=")
 tile_set = SubResource("TileSet_feb5d")
 
 [node name="ObjectTiles" type="TileMapLayer" parent="."]
 unique_name_in_owner = true
 y_sort_enabled = true
+position = Vector2(160, 88)
 tile_set = SubResource("TileSet_feb5d")
 
 [node name="Source" type="Sprite2D" parent="ObjectTiles"]
@@ -706,5 +708,6 @@ script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(3.5, 3.5)
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(160, 90)
+script = ExtResource("7_u5sy4")

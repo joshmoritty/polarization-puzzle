@@ -1,0 +1,710 @@
+[gd_scene load_steps=67 format=4 uid="uid://c2bso81u5xov"]
+
+[ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
+[ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/sine.gdshader" id="2_iywne"]
+[ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="3_p57ef"]
+[ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/source.gd" id="4_u5sy4"]
+[ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/filter.gd" id="5_iywne"]
+[ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/sensor.gd" id="6_p57ef"]
+
+[sub_resource type="SystemFont" id="SystemFont_p57ef"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_p57ef"]
+font = SubResource("SystemFont_p57ef")
+font_size = 10
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iywne"]
+render_priority = 0
+shader = ExtResource("2_iywne")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_p57ef"]
+material = SubResource("ShaderMaterial_iywne")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
+render_priority = 0
+shader = ExtResource("2_iywne")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0tnpc"]
+material = SubResource("ShaderMaterial_u5sy4")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="Shader" id="Shader_iywne"]
+code = "shader_type spatial;
+render_mode blend_mix, cull_disabled, unshaded;
+
+uniform float wavelength = 0.443;     // world units per cycle (mesh-relative)
+uniform float amplitude = 0.3;     // wave height (in UV units vertically)
+uniform float speed = 10.0;          // animation speed
+
+uniform vec4 wave_color      : source_color = vec4(1.0, 1.0, 0.0, 1.0); // sine wave
+uniform vec4 connector_color : source_color = vec4(1.0, 0.75, 0.0, 1.0); // vertical connectors
+uniform vec4 axis_color      : source_color = vec4(1.0, 0.75, 0.0, 1.0); // horizontal axis
+
+uniform float pixel_thickness = 0.5; // thickness in screen pixels
+uniform int connector_n = 4;         // number of connectors per wavelength
+
+varying vec3 vertex_local;
+
+void vertex() {
+    vertex_local = VERTEX;
+}
+
+void fragment() {
+    // --- Sine wave ---
+    float wave = 0.5 + amplitude * sin((vertex_local.x / wavelength) * 2.0 * PI + TIME * speed);
+
+    float dist_curve = abs(UV.y - wave);
+    float pixel_size_y = fwidth(UV.y);
+    float uv_thickness = pixel_thickness * pixel_size_y;
+    float mask_curve = 1.0 - step(uv_thickness, dist_curve);
+
+    // --- Vertical connector lines ---
+    float interval = wavelength / float(connector_n);
+    float mod_x = abs(mod(vertex_local.x, interval));
+    float dist_interval = min(mod_x, interval - mod_x);
+    float pixel_size_x = fwidth(vertex_local.x);
+    float x_thickness = pixel_thickness * pixel_size_x;
+    float mask_xline = 1.0 - step(x_thickness, dist_interval);
+
+    // Clamp vertically between axis and wave
+    float y_min = min(0.5, wave);
+    float y_max = max(0.5, wave);
+    float in_band = step(y_min, UV.y) * step(UV.y, y_max);
+    float mask_connectors = mask_xline * in_band;
+
+    // --- Horizontal axis line at y = 0.5 ---
+    float dist_axis = abs(UV.y - 0.5);
+    float mask_axis = 1.0 - step(uv_thickness, dist_axis);
+
+    // --- Layering with priority: axis > wave > connector ---
+    vec4 col = connector_color;
+    col = mix(col, wave_color, mask_curve); // wave overrides connectors
+    col = mix(col, axis_color, mask_axis);  // axis overrides wave
+
+    float alpha = clamp(mask_connectors + mask_curve + mask_axis, 0.0, 1.0);
+
+    ALBEDO = col.rgb;
+    ALPHA = alpha;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p57ef"]
+render_priority = 0
+shader = SubResource("Shader_iywne")
+shader_parameter/wavelength = 0.443
+shader_parameter/amplitude = 0.3
+shader_parameter/speed = 10.0
+shader_parameter/wave_color = Color(1, 1, 0, 1)
+shader_parameter/connector_color = Color(1, 0.75, 0, 1)
+shader_parameter/axis_color = Color(1, 0.75, 0, 1)
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_u5sy4"]
+material = SubResource("ShaderMaterial_p57ef")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="Shader" id="Shader_lbhrr"]
+code = "shader_type spatial;
+render_mode blend_mix, cull_disabled, unshaded;
+
+uniform float wavelength = 0.443;     // world units per cycle (mesh-relative)
+instance uniform float amplitude = 0.3;        // wave height (in UV units vertically)
+uniform float speed = 10.0;           // animation speed
+
+instance uniform vec4 wave_color      : source_color = vec4(1.0, 1.0, 0.0, 1.0); // sine wave
+instance uniform vec4 connector_color : source_color = vec4(1.0, 0.75, 0.0, 1.0); // vertical connectors
+instance uniform vec4 axis_color      : source_color = vec4(1.0, 0.75, 0.0, 1.0); // horizontal axis
+
+uniform float pixel_thickness = 0.5; // thickness in screen pixels
+uniform int connector_n = 4;         // number of connectors per wavelength
+
+varying vec3 vertex_local;
+
+void vertex() {
+    vertex_local = VERTEX;
+}
+
+void fragment() {
+    // --- Sine wave ---
+    float wave = 0.5 + amplitude * sin((vertex_local.x / wavelength) * 2.0 * PI + TIME * speed);
+
+    float dist_curve = abs(UV.y - wave);
+    float pixel_size_y = fwidth(UV.y);
+    float uv_thickness = pixel_thickness * pixel_size_y;
+    float mask_curve = 1.0 - step(uv_thickness, dist_curve);
+
+    // --- Vertical connector lines ---
+    float interval = wavelength / float(connector_n);
+    float mod_x = abs(mod(vertex_local.x, interval));
+    float dist_interval = min(mod_x, interval - mod_x);
+    float pixel_size_x = fwidth(vertex_local.x);
+    float x_thickness = pixel_thickness * pixel_size_x;
+    float mask_xline = 1.0 - step(x_thickness, dist_interval);
+
+    float y_min = min(0.5, wave);
+    float y_max = max(0.5, wave);
+    float in_band = step(y_min, UV.y) * step(UV.y, y_max);
+    float mask_connectors = mask_xline * in_band;
+
+    // --- Horizontal axis line at y = 0.5 ---
+    float dist_axis = abs(UV.y - 0.5);
+    float mask_axis = 1.0 - step(uv_thickness, dist_axis);
+
+    // --- Base color: connector layer ---
+    vec4 col = connector_color * mask_connectors;
+
+    // wave overrides connectors
+    col = mix(col, wave_color, mask_curve);
+
+    // axis overrides wave
+    col = mix(col, axis_color, mask_axis);
+
+    ALBEDO = col.rgb;
+    ALPHA  = col.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0tnpc"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vtaks"]
+material = SubResource("ShaderMaterial_0tnpc")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvpfn"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dinhu"]
+material = SubResource("ShaderMaterial_kvpfn")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvuet"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_trtic"]
+material = SubResource("ShaderMaterial_kvuet")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ir15t"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ca42v"]
+material = SubResource("ShaderMaterial_ir15t")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rysoc"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ssvqc"]
+material = SubResource("ShaderMaterial_rysoc")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_264po"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1kice"]
+material = SubResource("ShaderMaterial_264po")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5newe"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_37s47"]
+material = SubResource("ShaderMaterial_5newe")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bt5mj"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e1j6l"]
+material = SubResource("ShaderMaterial_bt5mj")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pl11u"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bhx41"]
+material = SubResource("ShaderMaterial_pl11u")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qnb83"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sww3w"]
+material = SubResource("ShaderMaterial_qnb83")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_suyxu"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sgl2t"]
+material = SubResource("ShaderMaterial_suyxu")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qouja"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wljb1"]
+material = SubResource("ShaderMaterial_qouja")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v2yb1"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_js0lu"]
+material = SubResource("ShaderMaterial_v2yb1")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gxtfn"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_twgab"]
+material = SubResource("ShaderMaterial_gxtfn")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_02fa5"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nepv3"]
+material = SubResource("ShaderMaterial_02fa5")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7025r"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m4url"]
+material = SubResource("ShaderMaterial_7025r")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ool0"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pr1ej"]
+material = SubResource("ShaderMaterial_8ool0")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_05nbr"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0sl42"]
+material = SubResource("ShaderMaterial_05nbr")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oaba0"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_458eo"]
+material = SubResource("ShaderMaterial_oaba0")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h3rex"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fedci"]
+material = SubResource("ShaderMaterial_h3rex")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8qswn"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rm0al"]
+material = SubResource("ShaderMaterial_8qswn")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i4re6"]
+render_priority = 0
+shader = SubResource("Shader_lbhrr")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pf7vy"]
+material = SubResource("ShaderMaterial_i4re6")
+size = Vector2(0.443, 0.443)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e2o6t"]
+texture = ExtResource("3_p57ef")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:1/0 = 0
+0:2/0 = 0
+0:3/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+5:2/0 = 0
+5:0/0 = 0
+4:2/0 = 0
+1:2/0 = 0
+0:4/0 = 0
+1:3/0 = 0
+1:4/0 = 0
+2:3/0 = 0
+2:4/0 = 0
+0:5/0 = 0
+0:6/0 = 0
+0:7/0 = 0
+1:5/0 = 0
+1:6/0 = 0
+1:7/0 = 0
+2:5/0 = 0
+2:6/0 = 0
+2:7/0 = 0
+3:4/0 = 0
+3:5/0 = 0
+3:6/0 = 0
+3:7/0 = 0
+4:4/0 = 0
+4:5/0 = 0
+4:6/0 = 0
+4:7/0 = 0
+5:3/0 = 0
+5:4/0 = 0
+5:5/0 = 0
+5:6/0 = 0
+5:7/0 = 0
+0:8/0 = 0
+1:8/0 = 0
+2:8/0 = 0
+3:8/0 = 0
+4:8/0 = 0
+5:8/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_feb5d"]
+tile_shape = 1
+tile_layout = 5
+tile_offset_axis = 1
+tile_size = Vector2i(32, 16)
+sources/0 = SubResource("TileSetAtlasSource_e2o6t")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p57ef"]
+atlas = ExtResource("3_p57ef")
+region = Rect2(96, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gee14"]
+atlas = ExtResource("3_p57ef")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_u5sy4"]
+load_path = "res://.godot/imported/isometric-sandbox-sheet.png-729035aa93b71847ff77061f576a2fc2.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tnpc"]
+atlas = SubResource("CompressedTexture2D_u5sy4")
+region = Rect2(64, 96, 32, 32)
+
+[node name="Root" type="Node2D"]
+script = ExtResource("1_lbhrr")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+offset = Vector2(-160, -90)
+transform = Transform2D(1, 0, 0, 1, -160, -90)
+follow_viewport_enabled = true
+
+[node name="SensorReadout" type="Label" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_right = 160.0
+offset_bottom = 40.0
+text = "Test"
+label_settings = SubResource("LabelSettings_p57ef")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(160, 160)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.499999, -0.707107, -0.353553, 0.612373, 4.06186, 3.5, 4.06186)
+projection = 1
+current = true
+size = 3.0
+
+[node name="0 0" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.284, 1.228, 0.428)
+mesh = SubResource("PlaneMesh_p57ef")
+
+[node name="0 1" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856, 1.228, 0)
+instance_shader_parameters/wave_color = Color(1, 1, 0, 1)
+mesh = SubResource("PlaneMesh_0tnpc")
+
+[node name="0 2" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.428, 1.228, -0.428)
+mesh = SubResource("PlaneMesh_u5sy4")
+
+[node name="0 3" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.228, -0.856)
+mesh = SubResource("PlaneMesh_vtaks")
+
+[node name="0 4" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.428, 1.228, -1.284)
+mesh = SubResource("PlaneMesh_dinhu")
+
+[node name="1 0" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.07, 0.704, 0.642)
+mesh = SubResource("PlaneMesh_trtic")
+
+[node name="1 1" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.642, 0.704, 0.214)
+mesh = SubResource("PlaneMesh_ca42v")
+
+[node name="1 2" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.214, 0.704, -0.214)
+mesh = SubResource("PlaneMesh_ssvqc")
+
+[node name="1 3" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.214, 0.704, -0.642)
+mesh = SubResource("PlaneMesh_1kice")
+
+[node name="1 4" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.642, 0.704, -1.07)
+mesh = SubResource("PlaneMesh_37s47")
+
+[node name="2 0" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856, 0.18, 0.856)
+mesh = SubResource("PlaneMesh_e1j6l")
+
+[node name="2 1" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.428, 0.18, 0.428)
+mesh = SubResource("PlaneMesh_bhx41")
+
+[node name="2 2" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+mesh = SubResource("PlaneMesh_sww3w")
+
+[node name="2 3" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.428, 0.18, -0.428)
+mesh = SubResource("PlaneMesh_sgl2t")
+
+[node name="2 4" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.856, 0.18, -0.856)
+mesh = SubResource("PlaneMesh_wljb1")
+
+[node name="3 0" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.642, -0.344, 1.07)
+mesh = SubResource("PlaneMesh_js0lu")
+
+[node name="3 1" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.214, -0.344, 0.642)
+mesh = SubResource("PlaneMesh_twgab")
+
+[node name="3 2" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.214, -0.344, 0.214)
+mesh = SubResource("PlaneMesh_nepv3")
+
+[node name="3 3" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.642, -0.344, -0.214)
+mesh = SubResource("PlaneMesh_m4url")
+
+[node name="3 4" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07, -0.344, -0.642)
+mesh = SubResource("PlaneMesh_pr1ej")
+
+[node name="4 0" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.428, -0.868, 1.284)
+mesh = SubResource("PlaneMesh_0sl42")
+
+[node name="4 1" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.868, 0.856)
+mesh = SubResource("PlaneMesh_458eo")
+
+[node name="4 2" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.428, -0.868, 0.428)
+mesh = SubResource("PlaneMesh_fedci")
+
+[node name="4 3" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.856, -0.868, 0)
+mesh = SubResource("PlaneMesh_rm0al")
+
+[node name="4 4" type="MeshInstance3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.284, -0.868, -0.428)
+mesh = SubResource("PlaneMesh_pf7vy")
+
+[node name="GroundTiles" type="TileMapLayer" parent="."]
+unique_name_in_owner = true
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAD8//3/AAAAAAAAAAD8//7/AAAAAAAAAAD8////AAAAAAAAAAD8/wAAAAAAAAAAAAD8/wEAAAAAAAAAAAD8/wIAAAAAAAAAAAD8/wMAAAAAAAAAAAD8/wQAAAAAAAAAAAD9//3/AAAAAAAAAAD9//7/AAAAAAAAAAD9////AAAAAAAAAAD9/wAAAAAAAAAAAAD9/wEAAAAAAAAAAAD9/wIAAAAAAAAAAAD9/wMAAAAAAAAAAAD9/wQAAAAAAAAAAAD+//3/AAAAAAAAAAD+//7/AAAAAAAAAAD+////AAAAAAAAAAD+/wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAAAAAD+/wQAAAAAAAAAAAD///3/AAAAAAAAAAD///7/AAAAAAAAAAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAD//wQAAAAAAAAAAAAAAP3/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAABAP3/AAAAAAAAAAABAP7/AAAAAAAAAAABAP//AAAAAAAAAAABAAAAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAP3/AAAAAAAAAAACAP7/AAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAADAP3/AAAAAAAAAAADAP7/AAAAAAAAAAADAP//AAAAAAAAAAADAAAAAAAAAAAAAAADAAEAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAD7//z/AAAAAAAAAAD7//3/AAAAAAAAAAD7//7/AAAAAAAAAAD7////AAAAAAAAAAD7/wAAAAAAAAAAAAD7/wEAAAAAAAAAAAD7/wIAAAAAAAAAAAD7/wMAAAAAAAAAAAD7/wQAAAAAAAAAAAD8//z/AAAAAAAAAAD9//z/AAAAAAAAAAD+//z/AAAAAAAAAAD///z/AAAAAAAAAAAAAPz/AAAAAAAAAAABAPz/AAAAAAAAAAACAPz/AAAAAAAAAAADAPz/AAAAAAAAAAA=")
+tile_set = SubResource("TileSet_feb5d")
+
+[node name="ObjectTiles" type="TileMapLayer" parent="."]
+unique_name_in_owner = true
+y_sort_enabled = true
+tile_set = SubResource("TileSet_feb5d")
+
+[node name="Source" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(-48, -40)
+texture = SubResource("AtlasTexture_p57ef")
+script = ExtResource("4_u5sy4")
+dir = 1
+intensity = 1
+
+[node name="Filter2" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(-16, -8)
+texture = SubResource("AtlasTexture_gee14")
+script = ExtResource("5_iywne")
+dir = 1
+polar = -60
+
+[node name="Filter" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(0, -16)
+texture = SubResource("AtlasTexture_gee14")
+script = ExtResource("5_iywne")
+dir = 1
+polar = -60
+
+[node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(64, 0)
+texture = SubResource("AtlasTexture_0tnpc")
+script = ExtResource("6_p57ef")
+dir = 1
+
+[node name="Source2" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(-80, -24)
+texture = SubResource("AtlasTexture_p57ef")
+script = ExtResource("4_u5sy4")
+dir = 1
+intensity = 1
+
+[node name="Source3" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(-32, -48)
+texture = SubResource("AtlasTexture_p57ef")
+script = ExtResource("4_u5sy4")
+dir = 1
+intensity = 1
+
+[node name="Source4" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(-64, -32)
+texture = SubResource("AtlasTexture_p57ef")
+script = ExtResource("4_u5sy4")
+dir = 1
+intensity = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3.5, 3.5)

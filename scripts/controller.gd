@@ -9,6 +9,10 @@ var beams: Array[Beam] = []
 @onready var label: Label = %"HoverReadout"
 var _outline_shader := load("res://assets/2d_outline.gdshader")
 var _hovered_sprite: CanvasItem = null
+@onready var filter_dialog: Control = $"CanvasLayer/FilterDialog"
+@onready var fd_slider: HSlider = filter_dialog.get_node("VBox/Slider") as HSlider
+@onready var fd_value: Label = filter_dialog.get_node("VBox/Value") as Label
+var _active_filter: Filter = null
 
 func _ready():
 	for pos in objs:
@@ -17,6 +21,14 @@ func _ready():
 			construct_beam(pos, obj.process_light(null))
 
 func _unhandled_input(event: InputEvent) -> void:
+	# When dialog open, suppress hover readout and allow outside-click close
+	if filter_dialog and filter_dialog.visible:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var rect := filter_dialog.get_global_rect()
+			if not rect.has_point(get_viewport().get_mouse_position()):
+				_close_filter_dialog()
+		return
+
 	# Update UI readout on hover via physics point query; clear when none
 	if event is InputEventMouseMotion and label:
 		var space_state := get_world_2d().direct_space_state
@@ -27,42 +39,95 @@ func _unhandled_input(event: InputEvent) -> void:
 		params.collision_mask = (1 << 3) | (1 << 4)
 		params.collide_with_areas = true
 		params.collide_with_bodies = false
+
 		var results := space_state.intersect_point(params, 8)
-		results.sort_custom(y_sort)
-		var found_beam := false
-		var new_hovered: CanvasItem = null
-		for hit in results:
-			var area: Area2D = hit.get("collider") as Area2D
-			if not area:
-				continue
-			var parent := area.get_parent()
-			if parent is BeamSection:
-				var sec: BeamSection = parent
-				label.text = sec.beam.data.format_readout()
-				new_hovered = sec
-				found_beam = true
-				break
-			elif parent is LightObject:
-				new_hovered = parent
-				break
-		if not found_beam:
+		var hovered = _max_y_hit(results)
+		if hovered is BeamSection:
+			label.text = hovered.beam.data.format_readout()
+		else:
 			label.text = ""
+		
 		# Apply/remove outline shader
-		if _hovered_sprite != new_hovered:
+		if _hovered_sprite != hovered:
 			# Remove from old
 			if _hovered_sprite:
 				_hovered_sprite.material = null
 			# Apply to new
-			_hovered_sprite = new_hovered
+			_hovered_sprite = hovered
 			if _hovered_sprite:
 				var mat := ShaderMaterial.new()
 				mat.shader = _outline_shader
 				_hovered_sprite.material = mat
 
-func y_sort(a: Dictionary, b: Dictionary):
-	var a_area = a.get("collider") as Area2D
-	var b_area = b.get("collider") as Area2D
-	return a_area.get_parent().position.y > b_area.get_parent().position.y
+	# Open/retarget filter dialog on left click
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var space_state := get_world_2d().direct_space_state
+		var params := PhysicsPointQueryParameters2D.new()
+		params.position = get_global_mouse_position()
+		params.collision_mask = (1 << 3) | (1 << 4)
+		params.collide_with_areas = true
+		params.collide_with_bodies = false
+		var results := space_state.intersect_point(params, 8)
+		var clicked = _max_y_hit(results)
+
+		if clicked is Filter:
+			_open_filter_dialog(clicked as Filter)
+
+func _open_filter_dialog(f: Filter) -> void:
+	_active_filter = f
+	if fd_slider and fd_value and filter_dialog:
+		fd_slider.value = clampi(f.polar, 0, 179)
+		fd_value.text = str(int(fd_slider.value))
+		if not filter_dialog.visible:
+			filter_dialog.visible = true
+		# Connect signals once
+		# Configure slider for integer steps and range
+		fd_slider.min_value = 0
+		fd_slider.max_value = 179
+		fd_slider.step = 1
+		fd_slider.rounded = true
+		# Connect once
+		if not fd_slider.value_changed.is_connected(_on_slider_changed):
+			fd_slider.value_changed.connect(_on_slider_changed)
+
+func _on_slider_changed(value: float) -> void:
+	if _active_filter:
+		_active_filter.polar = int(value)
+		fd_value.text = str(int(value))
+		_rebuild_beams()
+
+func _close_filter_dialog() -> void:
+	if filter_dialog:
+		filter_dialog.visible = false
+	_active_filter = null
+
+func _clear_beams() -> void:
+	for b in beams:
+		# Remove BeamSection sprites under tilemap
+		for child in tilemap.get_children():
+			if child is BeamSection:
+				child.queue_free()
+	beams.clear()
+
+func _rebuild_beams() -> void:
+	_clear_beams()
+	# Rebuild from all sources
+	for pos in objs:
+		var obj = objs[pos]
+		if obj is Source:
+			construct_beam(pos, obj.process_light(null))
+
+func _max_y_hit(hits: Array[Dictionary]):
+	var max_y = - INF
+	var max_obj: Node2D = null
+	for hit in hits:
+		var collider = hit.get("collider") as Area2D
+		var parent = collider.get_parent() as Node2D
+		var y = parent.position.y
+		if y > max_y:
+			max_y = y
+			max_obj = parent
+	return max_obj
 
 func construct_beam(pos: Vector2i, data: LightData):
 	var dir_vec = dir_to_vec(data.dir)

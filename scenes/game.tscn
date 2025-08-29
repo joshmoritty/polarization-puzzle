@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=69 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
 [ext_resource type="Shader" uid="uid://q3q37ots3iul" path="res://assets/sine.gdshader" id="2_iywne"]
@@ -16,6 +16,24 @@
 line_spacing = 0.0
 font = ExtResource("2_kvpfn")
 font_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvpfn"]
+bg_color = Color(0.792157, 0.776471, 0.745098, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.360784, 0.376471, 0.305882, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="Theme" id="Theme_dinhu"]
+Label/colors/font_color = Color(0.360784, 0.376471, 0.305882, 1)
+Label/font_sizes/font_size = 8
+Label/fonts/font = ExtResource("2_kvpfn")
+Panel/styles/panel = SubResource("StyleBoxFlat_kvpfn")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iywne"]
 render_priority = 0
@@ -530,9 +548,61 @@ offset_left = -168.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 48.0
-grow_horizontal = 0
 label_settings = SubResource("LabelSettings_p57ef")
 horizontal_alignment = 2
+
+[node name="FilterDialog" type="Control" parent="CanvasLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -72.0
+offset_right = 160.0
+offset_bottom = -8.0
+grow_vertical = 0
+theme = SubResource("Theme_dinhu")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/FilterDialog"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/FilterDialog"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/FilterDialog/VBox"]
+layout_mode = 2
+text = "Polarization"
+horizontal_alignment = 1
+
+[node name="Slider" type="HSlider" parent="CanvasLayer/FilterDialog/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 179.0
+rounded = true
+tick_count = 7
+
+[node name="Value" type="Label" parent="CanvasLayer/FilterDialog/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
 
 [node name="SubViewport" type="SubViewport" parent="."]
 unique_name_in_owner = true
@@ -667,20 +737,21 @@ texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
+polar = 60
 
 [node name="Filter2" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-16, -8)
 texture = ExtResource("6_vtaks")
 script = ExtResource("5_iywne")
 dir = 1
-polar = -60
+polar = 30
 
 [node name="Filter" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(0, -16)
 texture = ExtResource("6_vtaks")
 script = ExtResource("5_iywne")
 dir = 1
-polar = -60
+polar = 60
 
 [node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(64, 0)
@@ -701,6 +772,7 @@ texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
+polar = 90
 
 [node name="Source4" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-64, -32)
@@ -708,6 +780,7 @@ texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
+polar = 30
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(160, 90)

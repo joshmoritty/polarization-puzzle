@@ -2,7 +2,7 @@ class_name Controller
 extends Node2D
 
 var objs: Dictionary[Vector2i, LightObject] = {}
-var beams: Array[Beam] = []
+var beam_n = 0
 @onready var ground = %"GroundTiles" as TileMapLayer
 @onready var tilemap: TileMapLayer = %"ObjectTiles"
 @onready var view: SubViewport = %"SubViewport"
@@ -18,7 +18,7 @@ func _ready():
 	for pos in objs:
 		var obj = objs[pos]
 		if obj is Source:
-			construct_beam(pos, obj.process_light(null))
+			obj.build_beams()
 
 func _unhandled_input(event: InputEvent) -> void:
 	# When dialog open, suppress hover readout and allow outside-click close
@@ -94,28 +94,12 @@ func _on_slider_changed(value: float) -> void:
 	if _active_filter:
 		_active_filter.polar = int(value)
 		fd_value.text = str(int(value))
-		_rebuild_beams()
+		_active_filter.build_beams()
 
 func _close_filter_dialog() -> void:
 	if filter_dialog:
 		filter_dialog.visible = false
 	_active_filter = null
-
-func _clear_beams() -> void:
-	for b in beams:
-		# Remove BeamSection sprites under tilemap
-		for child in tilemap.get_children():
-			if child is BeamSection:
-				child.queue_free()
-	beams.clear()
-
-func _rebuild_beams() -> void:
-	_clear_beams()
-	# Rebuild from all sources
-	for pos in objs:
-		var obj = objs[pos]
-		if obj is Source:
-			construct_beam(pos, obj.process_light(null))
 
 func _max_y_hit(hits: Array[Dictionary]):
 	var max_y = - INF
@@ -129,30 +113,10 @@ func _max_y_hit(hits: Array[Dictionary]):
 			max_obj = parent
 	return max_obj
 
-func construct_beam(pos: Vector2i, data: LightData):
-	var dir_vec = dir_to_vec(data.dir)
-	var from = pos + dir_vec
-	var length = 0
-	
-	while true:
-		var check_pos = from + dir_vec * length
-		if (objs.has(check_pos)
-			or ground.get_cell_source_id(check_pos + Vector2i(1, 1)) == -1):
-			break
-		length += 1
-	
-	if length > 0:
-		var beam_n = beams.size()
-		var mesh_coord = Vector2i(beam_n / 5, beam_n % 5)
-		var beam = Beam.new(data, from, length, mesh_coord, view, tilemap)
-		beams.append(beam)
-	
-	var end = from + dir_vec * length
-	if objs.has(end):
-		var end_obj = objs[end]
-		var out_light = end_obj.process_light(data)
-		if out_light != null:
-			construct_beam(end, out_light)
+func get_next_mesh_coord():
+	var mesh_coord = Vector2i(beam_n / 5, beam_n % 5)
+	beam_n += 1
+	return mesh_coord
 
 static func dir_to_vec(dir: LightData.Dir):
 	if dir == LightData.Dir.UP_RIGHT:
@@ -166,6 +130,9 @@ static func dir_to_vec(dir: LightData.Dir):
 	return Vector2i(0, 0)
 
 func register_obj(obj: Node2D):
-	var tm = %"ObjectTiles" as TileMapLayer
-	var tilepos = tm.local_to_map(obj.position)
+	if not tilemap:
+		tilemap = %"ObjectTiles"
+	
+	var tilepos = tilemap.local_to_map(obj.position)
 	objs.set(tilepos, obj)
+	return tilepos

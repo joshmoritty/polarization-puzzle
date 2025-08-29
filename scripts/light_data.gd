@@ -30,3 +30,6 @@ func format_readout() -> String:
 	lines.append("Intensity: %.2f" % intensity)
 	lines.append("Polarization: %.2f" % float(polar))
 	return "\n".join(lines)
+
+func equals(data: LightData):
+	return dir == data.dir and intensity == data.intensity and polar == data.polar

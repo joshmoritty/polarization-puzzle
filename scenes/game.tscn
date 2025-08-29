@@ -1,7 +1,8 @@
 [gd_scene load_steps=67 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
-[ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/sine.gdshader" id="2_iywne"]
+[ext_resource type="Shader" uid="uid://q3q37ots3iul" path="res://assets/sine.gdshader" id="2_iywne"]
+[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="2_kvpfn"]
 [ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="3_p57ef"]
 [ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/source.gd" id="4_u5sy4"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/filter.gd" id="5_iywne"]
@@ -11,11 +12,10 @@
 [ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/camera.gd" id="7_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_DOWN_RIGHT.png" id="9_dinhu"]
 
-[sub_resource type="SystemFont" id="SystemFont_p57ef"]
-
 [sub_resource type="LabelSettings" id="LabelSettings_p57ef"]
-font = SubResource("SystemFont_p57ef")
-font_size = 10
+line_spacing = 0.0
+font = ExtResource("2_kvpfn")
+font_size = 8
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iywne"]
 render_priority = 0
@@ -531,7 +531,6 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 48.0
 grow_horizontal = 0
-text = "Test"
 label_settings = SubResource("LabelSettings_p57ef")
 horizontal_alignment = 2
 

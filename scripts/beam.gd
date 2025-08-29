@@ -41,16 +41,11 @@ func _init(
 	mesh.set_instance_shader_parameter("amplitude", data.intensity * 0.4)
 	var dir_vec = Controller.dir_to_vec(dir)
 	
-	var sprite = Sprite2D.new()
 	var tex = AtlasTexture.new()
 	var atlas = view.get_texture()
 	tex.atlas = atlas
 	tex.region = Rect2(mesh_coord.y * 32, mesh_coord.x * 32, 32, 32)
-	sprite.texture = tex
-	sprite.position = tilemap.map_to_local(from)
-	tilemap.add_child(sprite)
 	
-	for i in range(1, length):
-		var dupe = sprite.duplicate() as Sprite2D
-		dupe.position = tilemap.map_to_local(from + dir_vec * i)
-		tilemap.add_child(dupe)
+	for i in range(length):
+		var section = BeamSection.new(self, tilemap.map_to_local(from + dir_vec * i), tex)
+		tilemap.add_child(section)

@@ -6,6 +6,7 @@ extends LightObject
 @export var polar: int
 
 func _ready():
+	super._ready()
 	var builder = owner as Controller
 	builder.register_obj(self)
 

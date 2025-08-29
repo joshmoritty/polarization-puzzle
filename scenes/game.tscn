@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=67 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
 [ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/sine.gdshader" id="2_iywne"]
@@ -6,7 +6,10 @@
 [ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/source.gd" id="4_u5sy4"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/filter.gd" id="5_iywne"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/sensor.gd" id="6_p57ef"]
+[ext_resource type="Texture2D" uid="uid://bkrv3exiay8ac" path="res://assets/object_sprites/filter.png" id="6_vtaks"]
+[ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_DOWN_RIGHT.png" id="7_kvpfn"]
 [ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/camera.gd" id="7_u5sy4"]
+[ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_DOWN_RIGHT.png" id="9_dinhu"]
 
 [sub_resource type="SystemFont" id="SystemFont_p57ef"]
 
@@ -504,21 +507,6 @@ tile_offset_axis = 1
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_e2o6t")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_p57ef"]
-atlas = ExtResource("3_p57ef")
-region = Rect2(96, 224, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gee14"]
-atlas = ExtResource("3_p57ef")
-region = Rect2(0, 96, 32, 32)
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_u5sy4"]
-load_path = "res://.godot/imported/isometric-sandbox-sheet.png-729035aa93b71847ff77061f576a2fc2.ctex"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0tnpc"]
-atlas = SubResource("CompressedTexture2D_u5sy4")
-region = Rect2(64, 96, 32, 32)
-
 [node name="Root" type="Node2D"]
 script = ExtResource("1_lbhrr")
 
@@ -532,6 +520,20 @@ offset_right = 168.0
 offset_bottom = 48.0
 text = "Test"
 label_settings = SubResource("LabelSettings_p57ef")
+
+[node name="HoverReadout" type="Label" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -168.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 48.0
+grow_horizontal = 0
+text = "Test"
+label_settings = SubResource("LabelSettings_p57ef")
+horizontal_alignment = 2
 
 [node name="SubViewport" type="SubViewport" parent="."]
 unique_name_in_owner = true
@@ -662,48 +664,48 @@ tile_set = SubResource("TileSet_feb5d")
 
 [node name="Source" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-48, -40)
-texture = SubResource("AtlasTexture_p57ef")
+texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
 
 [node name="Filter2" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-16, -8)
-texture = SubResource("AtlasTexture_gee14")
+texture = ExtResource("6_vtaks")
 script = ExtResource("5_iywne")
 dir = 1
 polar = -60
 
 [node name="Filter" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(0, -16)
-texture = SubResource("AtlasTexture_gee14")
+texture = ExtResource("6_vtaks")
 script = ExtResource("5_iywne")
 dir = 1
 polar = -60
 
 [node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(64, 0)
-texture = SubResource("AtlasTexture_0tnpc")
+texture = ExtResource("7_kvpfn")
 script = ExtResource("6_p57ef")
 dir = 1
 
 [node name="Source2" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-80, -24)
-texture = SubResource("AtlasTexture_p57ef")
+texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
 
 [node name="Source3" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-32, -48)
-texture = SubResource("AtlasTexture_p57ef")
+texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
 
 [node name="Source4" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-64, -32)
-texture = SubResource("AtlasTexture_p57ef")
+texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1

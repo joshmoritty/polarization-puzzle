@@ -5,6 +5,7 @@ extends LightObject
 @onready var label: Label = %"SensorReadout"
 
 func _ready():
+	super._ready()
 	var builder = owner as Controller
 	builder.register_obj(self)
 

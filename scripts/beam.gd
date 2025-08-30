@@ -16,7 +16,6 @@ func _init(
 	data = p_data
 	from = p_from
 	controller = p_controller
-	print(controller)
 
 	build()
 

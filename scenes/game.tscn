@@ -1,9 +1,10 @@
-[gd_scene load_steps=69 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=44 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
-[ext_resource type="Shader" uid="uid://q3q37ots3iul" path="res://assets/sine.gdshader" id="2_iywne"]
 [ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="2_kvpfn"]
+[ext_resource type="Material" uid="uid://na807rdmihep" path="res://assets/shaders/sine.tres" id="3_dinhu"]
 [ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="3_p57ef"]
+[ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/shaders/sine.gdshader" id="4_dinhu"]
 [ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/source.gd" id="4_u5sy4"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/filter.gd" id="5_iywne"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/sensor.gd" id="6_p57ef"]
@@ -35,99 +36,19 @@ Label/font_sizes/font_size = 8
 Label/fonts/font = ExtResource("2_kvpfn")
 Panel/styles/panel = SubResource("StyleBoxFlat_kvpfn")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_iywne"]
-render_priority = 0
-shader = ExtResource("2_iywne")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_p57ef"]
-material = SubResource("ShaderMaterial_iywne")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
-render_priority = 0
-shader = ExtResource("2_iywne")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_0tnpc"]
-material = SubResource("ShaderMaterial_u5sy4")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="Shader" id="Shader_iywne"]
-code = "shader_type spatial;
-render_mode blend_mix, cull_disabled, unshaded;
-
-uniform float wavelength = 0.443;     // world units per cycle (mesh-relative)
-uniform float amplitude = 0.3;     // wave height (in UV units vertically)
-uniform float speed = 10.0;          // animation speed
-
-uniform vec4 wave_color      : source_color = vec4(1.0, 1.0, 0.0, 1.0); // sine wave
-uniform vec4 connector_color : source_color = vec4(1.0, 0.75, 0.0, 1.0); // vertical connectors
-uniform vec4 axis_color      : source_color = vec4(1.0, 0.75, 0.0, 1.0); // horizontal axis
-
-uniform float pixel_thickness = 0.5; // thickness in screen pixels
-uniform int connector_n = 4;         // number of connectors per wavelength
-
-varying vec3 vertex_local;
-
-void vertex() {
-    vertex_local = VERTEX;
-}
-
-void fragment() {
-    // --- Sine wave ---
-    float wave = 0.5 + amplitude * sin((vertex_local.x / wavelength) * 2.0 * PI + TIME * speed);
-
-    float dist_curve = abs(UV.y - wave);
-    float pixel_size_y = fwidth(UV.y);
-    float uv_thickness = pixel_thickness * pixel_size_y;
-    float mask_curve = 1.0 - step(uv_thickness, dist_curve);
-
-    // --- Vertical connector lines ---
-    float interval = wavelength / float(connector_n);
-    float mod_x = abs(mod(vertex_local.x, interval));
-    float dist_interval = min(mod_x, interval - mod_x);
-    float pixel_size_x = fwidth(vertex_local.x);
-    float x_thickness = pixel_thickness * pixel_size_x;
-    float mask_xline = 1.0 - step(x_thickness, dist_interval);
-
-    // Clamp vertically between axis and wave
-    float y_min = min(0.5, wave);
-    float y_max = max(0.5, wave);
-    float in_band = step(y_min, UV.y) * step(UV.y, y_max);
-    float mask_connectors = mask_xline * in_band;
-
-    // --- Horizontal axis line at y = 0.5 ---
-    float dist_axis = abs(UV.y - 0.5);
-    float mask_axis = 1.0 - step(uv_thickness, dist_axis);
-
-    // --- Layering with priority: axis > wave > connector ---
-    vec4 col = connector_color;
-    col = mix(col, wave_color, mask_curve); // wave overrides connectors
-    col = mix(col, axis_color, mask_axis);  // axis overrides wave
-
-    float alpha = clamp(mask_connectors + mask_curve + mask_axis, 0.0, 1.0);
-
-    ALBEDO = col.rgb;
-    ALPHA = alpha;
-}
-"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p57ef"]
 render_priority = 0
-shader = SubResource("Shader_iywne")
+shader = ExtResource("4_dinhu")
 shader_parameter/wavelength = 0.443
-shader_parameter/amplitude = 0.3
 shader_parameter/speed = 10.0
-shader_parameter/wave_color = Color(1, 1, 0, 1)
-shader_parameter/connector_color = Color(1, 0.75, 0, 1)
-shader_parameter/axis_color = Color(1, 0.75, 0, 1)
 shader_parameter/pixel_thickness = 0.5
 shader_parameter/connector_n = 4
 
@@ -135,329 +56,92 @@ shader_parameter/connector_n = 4
 material = SubResource("ShaderMaterial_p57ef")
 size = Vector2(0.443, 0.443)
 
-[sub_resource type="Shader" id="Shader_lbhrr"]
-code = "shader_type spatial;
-render_mode blend_mix, cull_disabled, unshaded;
-
-uniform float wavelength = 0.443;     // world units per cycle (mesh-relative)
-instance uniform float amplitude = 0.3;        // wave height (in UV units vertically)
-uniform float speed = 10.0;           // animation speed
-
-instance uniform vec4 wave_color      : source_color = vec4(1.0, 1.0, 0.0, 1.0); // sine wave
-instance uniform vec4 connector_color : source_color = vec4(1.0, 0.75, 0.0, 1.0); // vertical connectors
-instance uniform vec4 axis_color      : source_color = vec4(1.0, 0.75, 0.0, 1.0); // horizontal axis
-
-uniform float pixel_thickness = 0.5; // thickness in screen pixels
-uniform int connector_n = 4;         // number of connectors per wavelength
-
-varying vec3 vertex_local;
-
-void vertex() {
-    vertex_local = VERTEX;
-}
-
-void fragment() {
-    // --- Sine wave ---
-    float wave = 0.5 + amplitude * sin((vertex_local.x / wavelength) * 2.0 * PI + TIME * speed);
-
-    float dist_curve = abs(UV.y - wave);
-    float pixel_size_y = fwidth(UV.y);
-    float uv_thickness = pixel_thickness * pixel_size_y;
-    float mask_curve = 1.0 - step(uv_thickness, dist_curve);
-
-    // --- Vertical connector lines ---
-    float interval = wavelength / float(connector_n);
-    float mod_x = abs(mod(vertex_local.x, interval));
-    float dist_interval = min(mod_x, interval - mod_x);
-    float pixel_size_x = fwidth(vertex_local.x);
-    float x_thickness = pixel_thickness * pixel_size_x;
-    float mask_xline = 1.0 - step(x_thickness, dist_interval);
-
-    float y_min = min(0.5, wave);
-    float y_max = max(0.5, wave);
-    float in_band = step(y_min, UV.y) * step(UV.y, y_max);
-    float mask_connectors = mask_xline * in_band;
-
-    // --- Horizontal axis line at y = 0.5 ---
-    float dist_axis = abs(UV.y - 0.5);
-    float mask_axis = 1.0 - step(uv_thickness, dist_axis);
-
-    // --- Base color: connector layer ---
-    vec4 col = connector_color * mask_connectors;
-
-    // wave overrides connectors
-    col = mix(col, wave_color, mask_curve);
-
-    // axis overrides wave
-    col = mix(col, axis_color, mask_axis);
-
-    ALBEDO = col.rgb;
-    ALPHA  = col.a;
-}
-"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0tnpc"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_vtaks"]
-material = SubResource("ShaderMaterial_0tnpc")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvpfn"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_dinhu"]
-material = SubResource("ShaderMaterial_kvpfn")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvuet"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_trtic"]
-material = SubResource("ShaderMaterial_kvuet")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ir15t"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ca42v"]
-material = SubResource("ShaderMaterial_ir15t")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rysoc"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ssvqc"]
-material = SubResource("ShaderMaterial_rysoc")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_264po"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1kice"]
-material = SubResource("ShaderMaterial_264po")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5newe"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_37s47"]
-material = SubResource("ShaderMaterial_5newe")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bt5mj"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e1j6l"]
-material = SubResource("ShaderMaterial_bt5mj")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pl11u"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bhx41"]
-material = SubResource("ShaderMaterial_pl11u")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qnb83"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sww3w"]
-material = SubResource("ShaderMaterial_qnb83")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_suyxu"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sgl2t"]
-material = SubResource("ShaderMaterial_suyxu")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qouja"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wljb1"]
-material = SubResource("ShaderMaterial_qouja")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_v2yb1"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_js0lu"]
-material = SubResource("ShaderMaterial_v2yb1")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gxtfn"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_twgab"]
-material = SubResource("ShaderMaterial_gxtfn")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_02fa5"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nepv3"]
-material = SubResource("ShaderMaterial_02fa5")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7025r"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_m4url"]
-material = SubResource("ShaderMaterial_7025r")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ool0"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_pr1ej"]
-material = SubResource("ShaderMaterial_8ool0")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_05nbr"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_0sl42"]
-material = SubResource("ShaderMaterial_05nbr")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_oaba0"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_458eo"]
-material = SubResource("ShaderMaterial_oaba0")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h3rex"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_fedci"]
-material = SubResource("ShaderMaterial_h3rex")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8qswn"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_rm0al"]
-material = SubResource("ShaderMaterial_8qswn")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_i4re6"]
-render_priority = 0
-shader = SubResource("Shader_lbhrr")
-shader_parameter/wavelength = 0.443
-shader_parameter/speed = 10.0
-shader_parameter/pixel_thickness = 0.5
-shader_parameter/connector_n = 4
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_pf7vy"]
-material = SubResource("ShaderMaterial_i4re6")
+material = ExtResource("3_dinhu")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e2o6t"]
@@ -737,50 +421,19 @@ texture = ExtResource("9_dinhu")
 script = ExtResource("4_u5sy4")
 dir = 1
 intensity = 1
-polar = 60
 
 [node name="Filter2" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-16, -8)
-texture = ExtResource("6_vtaks")
-script = ExtResource("5_iywne")
-dir = 1
-polar = 30
-
-[node name="Filter" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(0, -16)
 texture = ExtResource("6_vtaks")
 script = ExtResource("5_iywne")
 dir = 1
-polar = 60
+polar = 90
 
 [node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(64, 0)
+position = Vector2(48, 8)
 texture = ExtResource("7_kvpfn")
 script = ExtResource("6_p57ef")
 dir = 1
-
-[node name="Source2" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-80, -24)
-texture = ExtResource("9_dinhu")
-script = ExtResource("4_u5sy4")
-dir = 1
-intensity = 1
-
-[node name="Source3" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-32, -48)
-texture = ExtResource("9_dinhu")
-script = ExtResource("4_u5sy4")
-dir = 1
-intensity = 1
-polar = 90
-
-[node name="Source4" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-64, -32)
-texture = ExtResource("9_dinhu")
-script = ExtResource("4_u5sy4")
-dir = 1
-intensity = 1
-polar = 30
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(160, 90)

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://na807rdmihep"]
+
+[ext_resource type="Shader" uid="uid://q3q37ots3iul" path="res://assets/sine.gdshader" id="1_5y7c5"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_5y7c5")
+shader_parameter/wavelength = 0.443
+shader_parameter/speed = 10.0
+shader_parameter/pixel_thickness = 0.5
+shader_parameter/connector_n = 4

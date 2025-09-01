@@ -57,8 +57,9 @@ func _build_beam(data: LightData):
 
 func _compare_light(a: LightData, b: LightData):
 	return (a.dir < b.dir or
-		(a.dir == b.dir and (a.intensity < b.intensity or
-		(a.intensity == b.intensity and a.polar < b.polar))))
+		(a.dir == b.dir and (a.color < b.color or
+		(a.color == b.color and (a.intensity < b.intensity or
+		(a.intensity == b.intensity and a.polar < b.polar))))))
 
 func _ready() -> void:
 	pos = (owner as Controller).register_obj(self)

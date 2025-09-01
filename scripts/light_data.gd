@@ -26,8 +26,6 @@ func dir_to_string() -> String:
 		_:
 			return str(dir)
 
-
-
 func format_readout() -> String:
 	var lines: Array[String] = []
 	lines.append("Direction: %s" % dir_to_string())
@@ -37,4 +35,9 @@ func format_readout() -> String:
 	return "\n".join(lines)
 
 func equals(data: LightData):
-	return dir == data.dir and intensity == data.intensity and polar == data.polar
+	return (
+		dir == data.dir
+		and color == data.color
+		and intensity == data.intensity
+		and polar == data.polar
+	)

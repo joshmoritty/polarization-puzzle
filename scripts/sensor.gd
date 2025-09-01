@@ -8,7 +8,6 @@ func _process_light():
 	if beams_in.size() == 0:
 		return []
 	
-	beams_in.sort_custom(_compare_color)
 	var text_lines: Array[String] = []
 
 	for beam in beams_in:
@@ -23,6 +22,3 @@ func _process_light():
 	
 	label.text = "\n".join(text_lines)
 	return []
-
-func _compare_color(a: Beam, b: Beam):
-	return a.data.color < b.data.color

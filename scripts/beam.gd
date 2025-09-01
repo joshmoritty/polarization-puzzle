@@ -63,9 +63,10 @@ func update_sprite():
 		mesh.rotation_degrees.y = 0
 		
 	mesh.rotation_degrees.x = data.polar
+	var color = LightColor.enum_to_col(data.color)
 	var opacity = 1;
-	var wave_color = lerp(Color(data.color.min_wave, opacity), Color(data.color.max_wave, opacity), data.intensity)
-	var axis_color = lerp(Color(data.color.min_axis, opacity), Color(data.color.max_axis, opacity), data.intensity)
+	var wave_color = lerp(Color(color.min_wave, opacity), Color(color.max_wave, opacity), data.intensity)
+	var axis_color = lerp(Color(color.min_axis, opacity), Color(color.max_axis, opacity), data.intensity)
 	mesh.set_instance_shader_parameter("wave_color", wave_color)
 	mesh.set_instance_shader_parameter("connector_color", axis_color)
 	mesh.set_instance_shader_parameter("axis_color", axis_color)

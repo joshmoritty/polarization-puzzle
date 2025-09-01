@@ -19,14 +19,28 @@ func _init(p_min_wave: Color, p_max_wave: Color, p_min_axis: Color, p_max_axis: 
 	min_axis = p_min_axis
 	max_axis = p_max_axis
 
-static func from_enum(e: LightColorEnum):
-	if e == LightColorEnum.RED:
-		return RED
-	if e == LightColorEnum.YELLOW:
-		return YELLOW
-	if e == LightColorEnum.GREEN:
-		return GREEN
-	if e == LightColorEnum.BLUE:
-		return BLUE
-	if e == LightColorEnum.PURPLE:
-		return PURPLE
+static func enum_to_col(e: LightColorEnum):
+	match e:
+		LightColorEnum.RED:
+			return RED
+		LightColorEnum.YELLOW:
+			return YELLOW
+		LightColorEnum.GREEN:
+			return GREEN
+		LightColorEnum.BLUE:
+			return BLUE
+		LightColorEnum.PURPLE:
+			return PURPLE
+
+static func enum_to_string(e: LightColorEnum):
+	match e:
+		LightColorEnum.RED:
+			return "Red"
+		LightColorEnum.YELLOW:
+			return "Yellow"
+		LightColorEnum.GREEN:
+			return "Green"
+		LightColorEnum.BLUE:
+			return "Blue"
+		LightColorEnum.PURPLE:
+			return "Purple"

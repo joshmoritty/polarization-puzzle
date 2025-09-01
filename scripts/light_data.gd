@@ -5,9 +5,9 @@ enum Dir {UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT}
 var dir: Dir
 var intensity: float
 var polar: int
-var color: LightColor
+var color: LightColor.LightColorEnum
 
-func _init(p_dir: Dir, p_intensity: float, p_polar: int, p_color: LightColor):
+func _init(p_dir: Dir, p_intensity: float, p_polar: int, p_color: LightColor.LightColorEnum):
 	dir = p_dir
 	intensity = p_intensity
 	polar = p_polar
@@ -31,6 +31,7 @@ func dir_to_string() -> String:
 func format_readout() -> String:
 	var lines: Array[String] = []
 	lines.append("Direction: %s" % dir_to_string())
+	lines.append("Color: %s" % LightColor.enum_to_string(color))
 	lines.append("Intensity: %.2f" % intensity)
 	lines.append("Polarization: %.2f" % float(polar))
 	return "\n".join(lines)

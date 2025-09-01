@@ -5,18 +5,15 @@ extends LightObject
 @export var polar: int
 
 func _process_light():
-	var light_out: LightData = null
+	var lights_out: Array[LightData] = []
 
 	for beam in beams_in:
 		var data = beam.data
 		if data.dir != dir:
-			return null
+			continue
 		
 		var theta = deg_to_rad(data.polar - polar)
 		var intensity = data.intensity * pow(cos(theta), 2)
-		if not light_out:
-			light_out = LightData.new(dir, intensity, polar, data.color)
-		else:
-			light_out.intensity += intensity
+		lights_out.push_back(LightData.new(dir, intensity, polar, data.color))
 
-	return [light_out]
+	return lights_out

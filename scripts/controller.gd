@@ -119,14 +119,15 @@ func get_next_mesh_coord():
 	return mesh_coord
 
 static func dir_to_vec(dir: LightData.Dir):
-	if dir == LightData.Dir.UP_RIGHT:
-		return Vector2i(0, -1)
-	elif dir == LightData.Dir.DOWN_RIGHT:
-		return Vector2i(1, 0)
-	elif dir == LightData.Dir.DOWN_LEFT:
-		return Vector2i(0, 1)
-	elif dir == LightData.Dir.UP_LEFT:
-		return Vector2i(-1, 0)
+	match dir:
+		LightData.Dir.UP_RIGHT:
+			return Vector2i(0, -1)
+		LightData.Dir.DOWN_RIGHT:
+			return Vector2i(1, 0)
+		LightData.Dir.DOWN_LEFT:
+			return Vector2i(0, 1)
+		LightData.Dir.UP_LEFT:
+			return Vector2i(-1, 0)
 	return Vector2i(0, 0)
 
 func register_obj(obj: Node2D):

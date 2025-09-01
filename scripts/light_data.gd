@@ -5,11 +5,13 @@ enum Dir {UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT}
 var dir: Dir
 var intensity: float
 var polar: int
+var color: LightColor
 
-func _init(p_dir: Dir, p_intensity: float, p_polar: int):
+func _init(p_dir: Dir, p_intensity: float, p_polar: int, p_color: LightColor):
 	dir = p_dir
 	intensity = p_intensity
 	polar = p_polar
+	color = p_color
 
 func dir_to_string() -> String:
 	match dir:
@@ -23,6 +25,8 @@ func dir_to_string() -> String:
 			return "Up-Left"
 		_:
 			return str(dir)
+
+
 
 func format_readout() -> String:
 	var lines: Array[String] = []

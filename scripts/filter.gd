@@ -15,7 +15,7 @@ func _process_light():
 		var theta = deg_to_rad(data.polar - polar)
 		var intensity = data.intensity * pow(cos(theta), 2)
 		if not light_out:
-			light_out = LightData.new(dir, intensity, polar)
+			light_out = LightData.new(dir, intensity, polar, data.color)
 		else:
 			light_out.intensity += intensity
 

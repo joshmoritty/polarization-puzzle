@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5vn7mht6yeeg"
-path="res://.godot/imported/sensor_UP_LEFT.png-4ef020eb0a85446b51ea812df0940f4a.ctex"
+uid="uid://dwyuvwo1i6kwn"
+path="res://.godot/imported/filter_1_3.png-a01f51eb31bacb271b96e25d8a2a75b1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/object_sprites/sensor_UP_LEFT.png"
-dest_files=["res://.godot/imported/sensor_UP_LEFT.png-4ef020eb0a85446b51ea812df0940f4a.ctex"]
+source_file="res://assets/object_sprites/filter_1_3.png"
+dest_files=["res://.godot/imported/filter_1_3.png-a01f51eb31bacb271b96e25d8a2a75b1.ctex"]
 
 [params]
 

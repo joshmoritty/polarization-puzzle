@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsjkegad250wb"
-path="res://.godot/imported/sensor_DOWN_RIGHT.png-543a6238685641c97780848a8f0661cc.ctex"
+uid="uid://dkk7uacj3f4h3"
+path="res://.godot/imported/junction_4_1.png-338544d56bb1947f655562c5c3cb463a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/object_sprites/sensor_DOWN_RIGHT.png"
-dest_files=["res://.godot/imported/sensor_DOWN_RIGHT.png-543a6238685641c97780848a8f0661cc.ctex"]
+source_file="res://assets/object_sprites/junction_4_1.png"
+dest_files=["res://.godot/imported/junction_4_1.png-338544d56bb1947f655562c5c3cb463a.ctex"]
 
 [params]
 

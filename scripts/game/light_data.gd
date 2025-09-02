@@ -1,6 +1,6 @@
 class_name LightData
 
-enum Dir {UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT}
+enum Dir {DOWN_RIGHT, DOWN_LEFT, UP_LEFT, UP_RIGHT}
 
 var dir: Dir
 var intensity: float

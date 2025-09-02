@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kum6enib4nis"
-path="res://.godot/imported/source_DOWN_RIGHT.png-9955534d18272f50f4c4621e42e349b1.ctex"
+uid="uid://b4unql656vrk8"
+path="res://.godot/imported/junction_1_2_3.png-24b949f81d7ef1651b3a0666d9d7b88e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/object_sprites/source_DOWN_RIGHT.png"
-dest_files=["res://.godot/imported/source_DOWN_RIGHT.png-9955534d18272f50f4c4621e42e349b1.ctex"]
+source_file="res://assets/object_sprites/junction_1_2_3.png"
+dest_files=["res://.godot/imported/junction_1_2_3.png-24b949f81d7ef1651b3a0666d9d7b88e.ctex"]
 
 [params]
 

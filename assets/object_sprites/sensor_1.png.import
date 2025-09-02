@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qf4vgvyap3r2"
-path="res://.godot/imported/sensor_DOWN_LEFT.png-d1c1f91c76a9a5da5f81529c97c87516.ctex"
+uid="uid://bsjkegad250wb"
+path="res://.godot/imported/sensor_1.png-700c41bfd6767b825811263925c35d58.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/object_sprites/sensor_DOWN_LEFT.png"
-dest_files=["res://.godot/imported/sensor_DOWN_LEFT.png-d1c1f91c76a9a5da5f81529c97c87516.ctex"]
+source_file="res://assets/object_sprites/sensor_1.png"
+dest_files=["res://.godot/imported/sensor_1.png-700c41bfd6767b825811263925c35d58.ctex"]
 
 [params]
 

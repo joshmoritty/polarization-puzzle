@@ -37,14 +37,10 @@ func build_beams():
 			_build_beam(data)
 		elif data.equals(beams_out[curr_beam_i].data):
 			used_beams[curr_beam_i] = true
-			curr_beam_i += 1
 		elif data.dir == beams_out[curr_beam_i].data.dir:
 			beams_out[curr_beam_i].update(data)
 			used_beams[curr_beam_i] = true
-			curr_beam_i += 1
-		else:
-			while data.dir > beams_out[curr_beam_i].data.dir:
-				curr_beam_i += 1
+		curr_beam_i += 1
 	
 	# Remove unused beams
 	for i in range(used_beams.size() - 1, -1, -1):

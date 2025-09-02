@@ -28,14 +28,12 @@ theme = SubResource("Theme_mfius")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
-text = "Test"
 label_settings = SubResource("LabelSettings_p57ef")
 
 [node name="HoverReadout" type="Label" parent="MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
-text = "Test"
 label_settings = SubResource("LabelSettings_p57ef")
 horizontal_alignment = 2
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=16 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/game/controller.gd" id="1_7gny6"]
 [ext_resource type="PackedScene" uid="uid://c33juruhhvftm" path="res://scenes/gui.tscn" id="2_2os1m"]
@@ -8,7 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://dwyuvwo1i6kwn" path="res://assets/object_sprites/filter_1_3.png" id="7_2os1m"]
 [ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/game/multi_source.gd" id="8_isj1j"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/game/filter.gd" id="10_tr1x6"]
+[ext_resource type="Texture2D" uid="uid://domlaif743et8" path="res://assets/object_sprites/junction_2_3_4.png" id="11_7gny6"]
 [ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_1.png" id="11_d5akn"]
+[ext_resource type="Script" uid="uid://dmyji628vxw82" path="res://scripts/game/junction.gd" id="11_go7sj"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/game/sensor.gd" id="12_wbtxt"]
 [ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/game/camera.gd" id="13_x2fux"]
 
@@ -110,6 +112,7 @@ polar_2 = 90
 color_2 = 3
 
 [node name="Filter" type="Sprite2D" parent="ObjectTiles"]
+visible = false
 position = Vector2(0, -16)
 texture = ExtResource("7_2os1m")
 script = ExtResource("10_tr1x6")
@@ -119,6 +122,13 @@ polar = 90
 position = Vector2(48, 8)
 texture = ExtResource("11_d5akn")
 script = ExtResource("12_wbtxt")
+
+[node name="Junction" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(0, -16)
+texture = ExtResource("11_7gny6")
+script = ExtResource("11_go7sj")
+in_dirs = Array[int]([0])
+out_dirs = Array[int]([1, 3, 0])
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(160, 90)

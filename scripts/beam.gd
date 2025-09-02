@@ -6,6 +6,7 @@ var from: Vector2i
 var length: int = 0
 var mesh_coord: Vector2i
 var mesh: MeshInstance3D
+var wave_mesh: MeshInstance3D
 var end_obj: LightObject = null
 
 func _init(
@@ -21,6 +22,7 @@ func _init(
 
 	mesh_coord = controller.get_next_mesh_coord()
 	mesh = controller.view.find_child("%d %d" % [mesh_coord.x, mesh_coord.y])
+	wave_mesh = mesh.find_child("Wave")
 	
 	update_sprite()
 
@@ -61,16 +63,20 @@ func update_sprite():
 		mesh.rotation_degrees.y = 90
 	else:
 		mesh.rotation_degrees.y = 0
-		
-	mesh.rotation_degrees.x = data.polar
+	
+	wave_mesh.rotation_degrees.x = data.polar
 	var color = LightColor.enum_to_col(data.color)
 	var opacity = 1;
 	var wave_color = lerp(Color(color.min_wave, opacity), Color(color.max_wave, opacity), data.intensity)
 	var axis_color = lerp(Color(color.min_axis, opacity), Color(color.max_axis, opacity), data.intensity)
-	mesh.set_instance_shader_parameter("wave_color", wave_color)
-	mesh.set_instance_shader_parameter("connector_color", axis_color)
-	mesh.set_instance_shader_parameter("axis_color", axis_color)
-	mesh.set_instance_shader_parameter("amplitude", data.intensity * 0.4)
+	wave_mesh.set_instance_shader_parameter("wave_color", wave_color)
+	wave_mesh.set_instance_shader_parameter("connector_color", axis_color)
+	wave_mesh.set_instance_shader_parameter("axis_color", axis_color)
+	wave_mesh.set_instance_shader_parameter("amplitude", data.intensity * 0.4)
+	
+	var plane = mesh.mesh as PlaneMesh
+	var material = plane.material as StandardMaterial3D
+	material.albedo_color = axis_color
 
 func update(p_data: LightData):
 	data = p_data

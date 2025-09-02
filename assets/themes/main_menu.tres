@@ -1,0 +1,54 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://cc6axt01mdjls"]
+
+[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="1_av2uu"]
+[ext_resource type="StyleBox" uid="uid://c4rega2p7ou4o" path="res://assets/themes/button_hover.tres" id="2_hahhc"]
+[ext_resource type="StyleBox" uid="uid://c023m4bfnntd8" path="res://assets/themes/button_default.tres" id="3_e4no3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvpfn"]
+bg_color = Color(0.792157, 0.776471, 0.745098, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.360784, 0.376471, 0.305882, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av2uu"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.337255, 0.752941, 0.380392, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.152941, 0.470588, 0.0352941, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[resource]
+Button/colors/font_color = Color(0.87451, 0.87451, 0, 1)
+Button/colors/font_focus_color = Color(0.94902, 0.94902, 0, 1)
+Button/colors/font_hover_color = Color(0.94902, 0.94902, 0, 1)
+Button/font_sizes/font_size = 8
+Button/fonts/font = ExtResource("1_av2uu")
+Button/styles/focus = ExtResource("2_hahhc")
+Button/styles/hover = ExtResource("2_hahhc")
+Button/styles/normal = ExtResource("3_e4no3")
+Button/styles/pressed = ExtResource("2_hahhc")
+Label/colors/font_color = Color(0.360784, 0.376471, 0.305882, 1)
+Label/constants/line_spacing = -3
+Label/font_sizes/font_size = 8
+Label/fonts/font = ExtResource("1_av2uu")
+MarginContainer/constants/margin_bottom = 5
+MarginContainer/constants/margin_left = 5
+MarginContainer/constants/margin_right = 5
+MarginContainer/constants/margin_top = 5
+Panel/styles/panel = SubResource("StyleBoxFlat_kvpfn")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_av2uu")

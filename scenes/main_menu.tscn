@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://cdk1k0f0rcwuj"]
+
+[ext_resource type="Theme" uid="uid://cc6axt01mdjls" path="res://assets/themes/main_menu.tres" id="1_ekxnf"]
+[ext_resource type="FontFile" uid="uid://g2fs3sapskof" path="res://assets/fonts/ari-w9500-display.ttf" id="2_bqqt6"]
+[ext_resource type="Script" uid="uid://oatv5n804voo" path="res://scripts/main_menu/play.gd" id="3_bqqt6"]
+[ext_resource type="Script" uid="uid://ov0h472ytv36" path="res://scripts/main_menu/exit.gd" id="4_wu84c"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
+line_spacing = -3.0
+font = ExtResource("2_bqqt6")
+font_size = 11
+font_color = Color(0.0705882, 0.494118, 0.345098, 1)
+
+[node name="MainMenu" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ekxnf")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "POLARIZATION
+PUZZLE"
+label_settings = SubResource("LabelSettings_wu84c")
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "PLAY"
+script = ExtResource("3_bqqt6")
+
+[node name="LevelSelect" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "LEVEL SELECT"
+
+[node name="Exit" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "EXIT"
+script = ExtResource("4_wu84c")

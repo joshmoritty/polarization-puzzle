@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Polariz"
-run/main_scene="uid://c2bso81u5xov"
+run/main_scene="uid://cdk1k0f0rcwuj"
 config/features=PackedStringArray("4.4", "Mobile")
 
 [debug]

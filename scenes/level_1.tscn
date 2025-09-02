@@ -1,40 +1,23 @@
-[gd_scene load_steps=94 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=93 format=4 uid="uid://c2bso81u5xov"]
 
-[ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/controller.gd" id="1_lbhrr"]
-[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="2_kvpfn"]
-[ext_resource type="Material" uid="uid://na807rdmihep" path="res://assets/shaders/sine.tres" id="3_dinhu"]
-[ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="3_p57ef"]
-[ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/shaders/sine.gdshader" id="4_dinhu"]
-[ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/filter.gd" id="5_iywne"]
-[ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/sensor.gd" id="6_p57ef"]
-[ext_resource type="Texture2D" uid="uid://bkrv3exiay8ac" path="res://assets/object_sprites/filter.png" id="6_vtaks"]
-[ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_DOWN_RIGHT.png" id="7_kvpfn"]
-[ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/camera.gd" id="7_u5sy4"]
-[ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_DOWN_RIGHT.png" id="9_dinhu"]
-[ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/multi_source.gd" id="12_trtic"]
+[ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/game/controller.gd" id="1_7gny6"]
+[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="2_2aecg"]
+[ext_resource type="Theme" uid="uid://d1av2ellnc52n" path="res://assets/themes/filter_dialog.tres" id="3_6dial"]
+[ext_resource type="Material" uid="uid://na807rdmihep" path="res://assets/shaders/sine.tres" id="4_7nomh"]
+[ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/shaders/sine.gdshader" id="5_1s4pk"]
+[ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="6_x2xxo"]
+[ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_DOWN_RIGHT.png" id="7_2cbcq"]
+[ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/game/multi_source.gd" id="8_isj1j"]
+[ext_resource type="Texture2D" uid="uid://bkrv3exiay8ac" path="res://assets/object_sprites/filter.png" id="9_so66j"]
+[ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/game/filter.gd" id="10_tr1x6"]
+[ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_DOWN_RIGHT.png" id="11_d5akn"]
+[ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/game/sensor.gd" id="12_wbtxt"]
+[ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/game/camera.gd" id="13_x2fux"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_p57ef"]
 line_spacing = 0.0
-font = ExtResource("2_kvpfn")
+font = ExtResource("2_2aecg")
 font_size = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvpfn"]
-bg_color = Color(0.792157, 0.776471, 0.745098, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.360784, 0.376471, 0.305882, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="Theme" id="Theme_dinhu"]
-Label/colors/font_color = Color(0.360784, 0.376471, 0.305882, 1)
-Label/font_sizes/font_size = 8
-Label/fonts/font = ExtResource("2_kvpfn")
-Panel/styles/panel = SubResource("StyleBoxFlat_kvpfn")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dinhu"]
 shading_mode = 0
@@ -44,7 +27,7 @@ material = SubResource("StandardMaterial3D_dinhu")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p57ef"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kvuet"]
@@ -55,7 +38,7 @@ material = SubResource("StandardMaterial3D_kvuet")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_0tnpc"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ca42v"]
@@ -67,7 +50,7 @@ size = Vector2(0.443, 0.025)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p57ef"]
 render_priority = 0
-shader = ExtResource("4_dinhu")
+shader = ExtResource("5_1s4pk")
 shader_parameter/wavelength = 0.443
 shader_parameter/speed = 10.0
 shader_parameter/pixel_thickness = 0.5
@@ -85,7 +68,7 @@ material = SubResource("StandardMaterial3D_trtic")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_vtaks"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1kice"]
@@ -96,7 +79,7 @@ material = SubResource("StandardMaterial3D_1kice")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_dinhu"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37s47"]
@@ -107,7 +90,7 @@ material = SubResource("StandardMaterial3D_37s47")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_trtic"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e1j6l"]
@@ -118,7 +101,7 @@ material = SubResource("StandardMaterial3D_e1j6l")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ca42v"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bhx41"]
@@ -129,7 +112,7 @@ material = SubResource("StandardMaterial3D_bhx41")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ssvqc"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sww3w"]
@@ -140,7 +123,7 @@ material = SubResource("StandardMaterial3D_sww3w")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1kice"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sgl2t"]
@@ -151,7 +134,7 @@ material = SubResource("StandardMaterial3D_sgl2t")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_37s47"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wljb1"]
@@ -162,7 +145,7 @@ material = SubResource("StandardMaterial3D_wljb1")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e1j6l"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_js0lu"]
@@ -173,7 +156,7 @@ material = SubResource("StandardMaterial3D_js0lu")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bhx41"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_twgab"]
@@ -184,7 +167,7 @@ material = SubResource("StandardMaterial3D_twgab")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sww3w"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nepv3"]
@@ -195,7 +178,7 @@ material = SubResource("StandardMaterial3D_nepv3")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sgl2t"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m4url"]
@@ -206,7 +189,7 @@ material = SubResource("StandardMaterial3D_m4url")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wljb1"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pr1ej"]
@@ -217,7 +200,7 @@ material = SubResource("StandardMaterial3D_pr1ej")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_js0lu"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0sl42"]
@@ -228,7 +211,7 @@ material = SubResource("StandardMaterial3D_0sl42")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_twgab"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_458eo"]
@@ -239,7 +222,7 @@ material = SubResource("StandardMaterial3D_458eo")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nepv3"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fedci"]
@@ -250,7 +233,7 @@ material = SubResource("StandardMaterial3D_fedci")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_m4url"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rm0al"]
@@ -261,7 +244,7 @@ material = SubResource("StandardMaterial3D_rm0al")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_pr1ej"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pf7vy"]
@@ -272,7 +255,7 @@ material = SubResource("StandardMaterial3D_pf7vy")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_0sl42"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3hbvx"]
@@ -283,7 +266,7 @@ material = SubResource("StandardMaterial3D_3hbvx")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_458eo"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ms3bu"]
@@ -294,7 +277,7 @@ material = SubResource("StandardMaterial3D_ms3bu")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_fedci"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bk1p3"]
@@ -305,7 +288,7 @@ material = SubResource("StandardMaterial3D_bk1p3")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_rm0al"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yd4ix"]
@@ -316,11 +299,11 @@ material = SubResource("StandardMaterial3D_yd4ix")
 size = Vector2(0.443, 0.025)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_pf7vy"]
-material = ExtResource("3_dinhu")
+material = ExtResource("4_7nomh")
 size = Vector2(0.443, 0.443)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e2o6t"]
-texture = ExtResource("3_p57ef")
+texture = ExtResource("6_x2xxo")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:1/0 = 0
@@ -385,7 +368,7 @@ tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_e2o6t")
 
 [node name="Root" type="Node2D"]
-script = ExtResource("1_lbhrr")
+script = ExtResource("1_7gny6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -422,7 +405,7 @@ offset_top = -72.0
 offset_right = 160.0
 offset_bottom = -8.0
 grow_vertical = 0
-theme = SubResource("Theme_dinhu")
+theme = ExtResource("3_6dial")
 
 [node name="Panel" type="Panel" parent="CanvasLayer/FilterDialog"]
 layout_mode = 1
@@ -691,8 +674,8 @@ tile_set = SubResource("TileSet_feb5d")
 
 [node name="MultiSource" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(-48, -40)
-texture = ExtResource("9_dinhu")
-script = ExtResource("12_trtic")
+texture = ExtResource("7_2cbcq")
+script = ExtResource("8_isj1j")
 intensity_1 = 1
 enabled_2 = true
 intensity_2 = 1
@@ -702,28 +685,17 @@ dir = 1
 
 [node name="Filter" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(0, -16)
-texture = ExtResource("6_vtaks")
-script = ExtResource("5_iywne")
+texture = ExtResource("9_so66j")
+script = ExtResource("10_tr1x6")
 dir = 1
 polar = 90
 
 [node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(48, 8)
-texture = ExtResource("7_kvpfn")
-script = ExtResource("6_p57ef")
+texture = ExtResource("11_d5akn")
+script = ExtResource("12_wbtxt")
 dir = 1
-
-[node name="MultiSource2" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(48, -40)
-texture = ExtResource("9_dinhu")
-script = ExtResource("12_trtic")
-intensity_1 = 1
-enabled_2 = true
-intensity_2 = 1
-polar_2 = 90
-color_2 = 3
-dir = 2
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(160, 90)
-script = ExtResource("7_u5sy4")
+script = ExtResource("13_x2fux")

@@ -5,8 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://c5jeh6aawd8mg" path="res://scenes/sub_viewport.tscn" id="4_go7sj"]
 [ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="6_x2xxo"]
 [ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_DOWN_RIGHT.png" id="7_2cbcq"]
+[ext_resource type="Texture2D" uid="uid://dwyuvwo1i6kwn" path="res://assets/object_sprites/filter_RIGHT.png" id="7_2os1m"]
 [ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/game/multi_source.gd" id="8_isj1j"]
-[ext_resource type="Texture2D" uid="uid://bkrv3exiay8ac" path="res://assets/object_sprites/filter.png" id="9_so66j"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/game/filter.gd" id="10_tr1x6"]
 [ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_DOWN_RIGHT.png" id="11_d5akn"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/game/sensor.gd" id="12_wbtxt"]
@@ -112,7 +112,7 @@ dir = 1
 
 [node name="Filter" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(0, -16)
-texture = ExtResource("9_so66j")
+texture = ExtResource("7_2os1m")
 script = ExtResource("10_tr1x6")
 dir = 1
 polar = 90

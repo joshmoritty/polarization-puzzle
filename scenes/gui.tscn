@@ -1,0 +1,74 @@
+[gd_scene load_steps=5 format=3 uid="uid://c33juruhhvftm"]
+
+[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="1_mfius"]
+[ext_resource type="Theme" uid="uid://d1av2ellnc52n" path="res://assets/themes/filter_dialog.tres" id="2_ynd5l"]
+
+[sub_resource type="Theme" id="Theme_mfius"]
+MarginContainer/constants/margin_bottom = 6
+MarginContainer/constants/margin_left = 6
+MarginContainer/constants/margin_right = 6
+MarginContainer/constants/margin_top = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_p57ef"]
+line_spacing = 0.0
+font = ExtResource("1_mfius")
+font_size = 8
+
+[node name="GUI" type="CanvasLayer"]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_mfius")
+
+[node name="SensorReadout" type="Label" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "Test"
+label_settings = SubResource("LabelSettings_p57ef")
+
+[node name="HoverReadout" type="Label" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "Test"
+label_settings = SubResource("LabelSettings_p57ef")
+horizontal_alignment = 2
+
+[node name="FilterDialog" type="PanelContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = ExtResource("2_ynd5l")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/FilterDialog"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/FilterDialog/MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
+layout_mode = 2
+text = "Polarization"
+horizontal_alignment = 1
+
+[node name="Slider" type="HSlider" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 179.0
+rounded = true
+tick_count = 7
+
+[node name="Value" type="Label" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1

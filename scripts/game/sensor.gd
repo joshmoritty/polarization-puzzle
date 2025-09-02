@@ -2,7 +2,7 @@ class_name Sensor
 extends LightObject
 
 @export var dir: LightData.Dir
-@onready var label: Label = %"SensorReadout"
+@onready var label: Label = %"GUI".get_node("MarginContainer/SensorReadout")
 
 func _process_light():
 	if beams_in.size() == 0:

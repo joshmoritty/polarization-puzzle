@@ -3,16 +3,17 @@ extends Node2D
 
 var objs: Dictionary[Vector2i, LightObject] = {}
 var beam_n = 0
+var _outline_shader := load("res://assets/2d_outline.gdshader")
+var _active_filter: Filter = null
+var _hovered_sprite: CanvasItem = null
 @onready var ground = %"GroundTiles" as TileMapLayer
 @onready var tilemap: TileMapLayer = %"ObjectTiles"
 @onready var view: SubViewport = %"SubViewport"
-@onready var label: Label = %"HoverReadout"
-var _outline_shader := load("res://assets/2d_outline.gdshader")
-var _hovered_sprite: CanvasItem = null
-@onready var filter_dialog: Control = $"CanvasLayer/FilterDialog"
-@onready var fd_slider: HSlider = filter_dialog.get_node("VBox/Slider") as HSlider
-@onready var fd_value: Label = filter_dialog.get_node("VBox/Value") as Label
-var _active_filter: Filter = null
+@onready var gui: CanvasLayer = %"GUI"
+@onready var label: Label = gui.get_node("MarginContainer/HoverReadout")
+@onready var filter_dialog: Control = gui.get_node("MarginContainer/FilterDialog")
+@onready var fd_slider: HSlider = filter_dialog.get_node("MarginContainer/VBox/Slider") as HSlider
+@onready var fd_value: Label = filter_dialog.get_node("MarginContainer/VBox/Value") as Label
 
 func _ready():
 	for pos in objs:

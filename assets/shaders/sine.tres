@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://na807rdmihep"]
 
-[ext_resource type="Shader" uid="uid://q3q37ots3iul" path="res://assets/sine.gdshader" id="1_5y7c5"]
+[ext_resource type="Shader" uid="uid://gsi3gl42edff" path="res://assets/shaders/sine.gdshader" id="1_5y7c5"]
 
 [resource]
 render_priority = 0

@@ -183,18 +183,6 @@ func free_mesh_coord(coord: Vector2i):
 	var i = coord.x * 5 + coord.y
 	beams_used[i] = false
 
-static func dir_to_vec(dir: LightData.Dir):
-	match dir:
-		LightData.Dir.UP_RIGHT:
-			return Vector2i(0, -1)
-		LightData.Dir.DOWN_RIGHT:
-			return Vector2i(1, 0)
-		LightData.Dir.DOWN_LEFT:
-			return Vector2i(0, 1)
-		LightData.Dir.UP_LEFT:
-			return Vector2i(-1, 0)
-	return Vector2i(0, 0)
-
 func register_obj(obj: Node2D):
 	if not tilemap:
 		tilemap = %"ObjectTiles"

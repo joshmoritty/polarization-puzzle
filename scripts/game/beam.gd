@@ -27,7 +27,7 @@ func _init(
 	
 	update_sprite()
 
-	var dir_vec = Controller.dir_to_vec(data.dir)
+	var dir_vec = LightData.dir_to_vec(data.dir)
 	
 	var tex = AtlasTexture.new()
 	var atlas = controller.view.get_texture()
@@ -40,7 +40,7 @@ func _init(
 		sections.push_back(section)
 
 func build():
-	var dir_vec = Controller.dir_to_vec(data.dir)
+	var dir_vec = LightData.dir_to_vec(data.dir)
 
 	while true:
 		var check_pos = from + dir_vec * length

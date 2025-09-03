@@ -26,6 +26,18 @@ static func dir_to_string(d: Dir) -> String:
 		_:
 			return str(d)
 
+static func dir_to_vec(d: Dir):
+	match d:
+		Dir.UP_RIGHT:
+			return Vector2i(0, -1)
+		Dir.DOWN_RIGHT:
+			return Vector2i(1, 0)
+		Dir.DOWN_LEFT:
+			return Vector2i(0, 1)
+		Dir.UP_LEFT:
+			return Vector2i(-1, 0)
+	return Vector2i(0, 0)
+
 func format_readout() -> String:
 	var lines: Array[String] = []
 	lines.append("Color: %s" % LightColor.enum_to_string(color))

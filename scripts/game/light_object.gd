@@ -53,7 +53,7 @@ func build_beams():
 			beams_out.remove_at(i)
 
 func _build_beam(data: LightData):
-	var beam = Beam.new(data, pos + Controller.dir_to_vec(data.dir), owner)
+	var beam = Beam.new(data, pos + LightData.dir_to_vec(data.dir), owner)
 	beams_out.push_back(beam)
 
 func _ready() -> void:

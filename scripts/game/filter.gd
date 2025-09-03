@@ -17,3 +17,6 @@ func _process_light():
 		lights_out.push_back(LightData.new(dir, intensity, polar, data.color))
 
 	return lights_out
+
+func get_hover_info() -> String:
+	return "Polarization: %d°" % polar

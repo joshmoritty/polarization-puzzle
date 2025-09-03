@@ -31,3 +31,8 @@ func _ready() -> void:
 	poly.polygon = POLY_POINTS
 	poly.position = Vector2(-6, -18)
 	area.add_child(poly)
+
+func get_hover_info() -> String:
+	if beam and beam.data:
+		return beam.data.format_readout()
+	return ""

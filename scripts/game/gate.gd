@@ -58,3 +58,15 @@ func _update_sprite():
 		texture = open_texture
 	elif !open and texture != closed_texture:
 		texture = closed_texture
+
+func get_hover_info() -> String:
+	var blocks: Array[String] = []
+	blocks.append("Open" if open else "Closed")
+	# Requirement 1 summary
+	var r1_req := Requirement.new(req_1_dir, req_1_color, req_1_min_intensity, req_1_min_polar, req_1_max_polar, false)
+	blocks.append(r1_req.format_summary())
+	# Requirement 2 if used
+	if req_2_used:
+		var r2_req := Requirement.new(req_2_dir, req_2_color, req_2_min_intensity, req_2_min_polar, req_2_max_polar, false)
+		blocks.append(r2_req.format_summary())
+	return "\n\n".join(blocks)

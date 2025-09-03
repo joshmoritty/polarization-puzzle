@@ -23,8 +23,8 @@ func build_beams():
 			_build_beam(data)
 		return
 	
-	light_out.sort_custom(_compare_light)
-	beams_out.sort_custom(func(a, b): return _compare_light(a.data, b.data))
+	light_out.sort_custom(LightData.compare)
+	beams_out.sort_custom(func(a, b): return LightData.compare(a.data, b.data))
 
 	var used_beams = []
 	for i in range(beams_out.size()):
@@ -56,12 +56,6 @@ func _build_beam(data: LightData):
 	var beam = Beam.new(data, pos + Controller.dir_to_vec(data.dir), owner)
 	beams_out.push_back(beam)
 
-func _compare_light(a: LightData, b: LightData):
-	return (a.dir < b.dir or
-		(a.dir == b.dir and (a.color < b.color or
-		(a.color == b.color and (a.intensity < b.intensity or
-		(a.intensity == b.intensity and a.polar < b.polar))))))
-
 func _ready() -> void:
 	pos = (owner as Controller).register_obj(self)
 
@@ -83,3 +77,7 @@ func _ready() -> void:
 
 			if centered:
 				collision_poly.position -= Vector2(bitmap.get_size()) / 2
+
+# Default hover info, subclasses override for richer details
+func get_hover_info() -> String:
+	return ""

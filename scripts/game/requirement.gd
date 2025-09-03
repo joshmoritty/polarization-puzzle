@@ -36,3 +36,12 @@ func is_successful(beams: Array[Beam]) -> bool:
 	if use_total_intensity:
 		return total_intensity >= min_intensity
 	return false
+
+func format_summary() -> String:
+	var lines: Array[String] = []
+	lines.append("Direction: %s" % LightData.dir_to_string(dir))
+	lines.append("Color: %s" % LightColor.enum_to_string(color))
+	var intensity_label = "Total Intensity" if use_total_intensity else "Intensity"
+	lines.append("%s: >= %.2f" % [intensity_label, min_intensity])
+	lines.append("Polarization: %d°-%d°" % [min_polar, max_polar])
+	return "\n".join(lines)

@@ -3,9 +3,9 @@ extends Node2D
 
 var objs: Dictionary[Vector2i, LightObject] = {}
 var beams_used: Array[bool] = []
-var _outline_shader := load("res://assets/2d_outline.gdshader")
+var _outline_shader := load("res://assets/shaders/2d_outline.gdshader")
 var _active_filter: Filter = null
-var _hovered_sprite: CanvasItem = null
+var _hovered_sprites: Array[CanvasItem] = []
 @onready var ground = %"GroundTiles" as TileMapLayer
 @onready var tilemap: TileMapLayer = %"ObjectTiles"
 @onready var view: SubViewport = %"SubViewport"
@@ -44,24 +44,79 @@ func _unhandled_input(event: InputEvent) -> void:
 		params.collide_with_areas = true
 		params.collide_with_bodies = false
 
-		var results := space_state.intersect_point(params, 8)
-		var hovered = _max_y_hit(results)
-		if hovered is BeamSection:
-			label.text = hovered.beam.data.format_readout()
-		else:
-			label.text = ""
+		var results := space_state.intersect_point(params, 16)
+		var text_out := ""
+		# Find the position with the lowest y among hits, then collect items at that position
+		var selected_pos: Vector2
+		var max_y := -INF
+		for hit in results:
+			var collider = hit.get("collider") as Area2D
+			var parent := collider.get_parent() as Node2D
+			if parent == null:
+				continue
+			var p := parent.position
+			if p.y > max_y:
+				max_y = p.y
+				selected_pos = p
 		
-		# Apply/remove outline shader
-		if _hovered_sprite != hovered:
-			# Remove from old
-			if _hovered_sprite:
-				_hovered_sprite.material = null
-			# Apply to new
-			_hovered_sprite = hovered
-			if _hovered_sprite:
+		var selected_beams: Array[BeamSection] = []
+		var selected_objs: Array[LightObject] = []
+		if max_y > -INF:
+			for hit in results:
+				var collider = hit.get("collider") as Area2D
+				var parent = collider.get_parent()
+				if parent == null:
+					continue
+				var p2 := (parent as Node2D).position
+				if p2 == selected_pos:
+					if parent is BeamSection:
+						selected_beams.append(parent)
+					elif parent is LightObject:
+						selected_objs.append(parent)
+		# Build text: object info first (single top-most if multiple at same pos)
+		if selected_objs.size() > 0:
+			var top_obj: LightObject = selected_objs[0]
+			if top_obj and top_obj.has_method("get_hover_info"):
+				var obj_txt := top_obj.get_hover_info()
+				if obj_txt != "":
+					text_out = obj_txt
+		# Then beams: sort by LightData.compare and append all from same pos
+		if selected_beams.size() > 0:
+			selected_beams.sort_custom(func(a, b): return LightData.compare(a.beam.data, b.beam.data))
+			var lines: Array[String] = []
+			for bs in selected_beams:
+				var s := bs.get_hover_info()
+				if s != "":
+					lines.append(s)
+			if lines.size() > 0:
+				if text_out != "":
+					text_out += "\n\n"
+				text_out += "\n---\n".join(lines)
+		label.text = text_out
+		# Apply/remove outline shader: outline all selected beam sections; otherwise top-most item
+		# Clear previous outlines
+		for ci in _hovered_sprites:
+			if ci:
+				ci.material = null
+		_hovered_sprites.clear()
+		if selected_beams.size() >= 2:
+			for bs in selected_beams:
 				var mat := ShaderMaterial.new()
 				mat.shader = _outline_shader
-				_hovered_sprite.material = mat
+				bs.material = mat
+				_hovered_sprites.append(bs)
+		else:
+			# Outline a single top-most element in selected group
+			var to_outline: CanvasItem = null
+			if selected_objs.size() > 0:
+				to_outline = selected_objs[0]
+			elif selected_beams.size() > 0:
+				to_outline = selected_beams[0]
+			if to_outline:
+				var mat2 := ShaderMaterial.new()
+				mat2.shader = _outline_shader
+				to_outline.material = mat2
+				_hovered_sprites.append(to_outline)
 
 	# Open/retarget filter dialog on left click
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -71,7 +126,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		params.collision_mask = (1 << 3) | (1 << 4)
 		params.collide_with_areas = true
 		params.collide_with_bodies = false
-		var results := space_state.intersect_point(params, 8)
+		var results := space_state.intersect_point(params, 16)
 		var clicked = _max_y_hit(results)
 
 		if clicked is Filter:

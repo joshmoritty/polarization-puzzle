@@ -8,6 +8,7 @@ var mesh_coord: Vector2i
 var mesh: MeshInstance3D
 var wave_mesh: MeshInstance3D
 var end_obj: LightObject = null
+var sections: Array[BeamSection] = []
 
 func _init(
 	p_data: LightData,
@@ -36,6 +37,7 @@ func _init(
 	for i in range(length):
 		var section = BeamSection.new(self, controller.tilemap.map_to_local(from + dir_vec * i), tex)
 		controller.tilemap.add_child(section)
+		sections.push_back(section)
 
 func build():
 	var dir_vec = Controller.dir_to_vec(data.dir)
@@ -83,3 +85,8 @@ func update(p_data: LightData):
 	update_sprite()
 	if end_obj:
 		end_obj.build_beams()
+
+func delete():
+	for section in sections:
+		section.queue_free()
+	sections = []

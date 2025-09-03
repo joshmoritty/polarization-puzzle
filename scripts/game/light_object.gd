@@ -24,27 +24,32 @@ func build_beams():
 		return
 	
 	light_out.sort_custom(_compare_light)
-	beams_out.sort_custom(func(a, b): _compare_light(a.data, b.data))
+	beams_out.sort_custom(func(a, b): return _compare_light(a.data, b.data))
 
 	var used_beams = []
 	for i in range(beams_out.size()):
 		used_beams.push_back(false)
-
+	
 	var curr_beam_i = 0
 	# Reuse same dir beams, if not existing, build new beams
 	for data in light_out:
-		if curr_beam_i >= beams_out.size() or data.dir < beams_out[curr_beam_i].data.dir:
+		while (curr_beam_i < used_beams.size()
+				and data.dir > beams_out[curr_beam_i].data.dir):
+				curr_beam_i += 1
+		if curr_beam_i >= used_beams.size() or data.dir < beams_out[curr_beam_i].data.dir:
 			_build_beam(data)
 		elif data.equals(beams_out[curr_beam_i].data):
 			used_beams[curr_beam_i] = true
+			curr_beam_i += 1
 		elif data.dir == beams_out[curr_beam_i].data.dir:
 			beams_out[curr_beam_i].update(data)
 			used_beams[curr_beam_i] = true
-		curr_beam_i += 1
-	
+			curr_beam_i += 1
+			
 	# Remove unused beams
 	for i in range(used_beams.size() - 1, -1, -1):
 		if not used_beams[i]:
+			beams_out[i].delete()
 			beams_out.remove_at(i)
 
 func _build_beam(data: LightData):

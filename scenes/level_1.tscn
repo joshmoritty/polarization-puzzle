@@ -1,18 +1,21 @@
-[gd_scene load_steps=16 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=19 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/game/controller.gd" id="1_7gny6"]
 [ext_resource type="PackedScene" uid="uid://c33juruhhvftm" path="res://scenes/gui.tscn" id="2_2os1m"]
 [ext_resource type="PackedScene" uid="uid://c5jeh6aawd8mg" path="res://scenes/sub_viewport.tscn" id="4_go7sj"]
+[ext_resource type="Texture2D" uid="uid://23070kqlihql" path="res://assets/object_sprites/source_2.png" id="5_2aecg"]
 [ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="6_x2xxo"]
 [ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_1.png" id="7_2cbcq"]
-[ext_resource type="Texture2D" uid="uid://dwyuvwo1i6kwn" path="res://assets/object_sprites/filter_1_3.png" id="7_2os1m"]
+[ext_resource type="Texture2D" uid="uid://to24do51lhxf" path="res://assets/object_sprites/filter_2_4.png" id="7_2os1m"]
+[ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/game/single_source.gd" id="8_6dial"]
 [ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/game/multi_source.gd" id="8_isj1j"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/game/filter.gd" id="10_tr1x6"]
-[ext_resource type="Texture2D" uid="uid://domlaif743et8" path="res://assets/object_sprites/junction_2_3_4.png" id="11_7gny6"]
 [ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_1.png" id="11_d5akn"]
-[ext_resource type="Script" uid="uid://dmyji628vxw82" path="res://scripts/game/junction.gd" id="11_go7sj"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/game/sensor.gd" id="12_wbtxt"]
+[ext_resource type="Texture2D" uid="uid://c8tsc7jumqrns" path="res://assets/object_sprites/gate_1_4.png" id="13_7nomh"]
 [ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/game/camera.gd" id="13_x2fux"]
+[ext_resource type="Script" uid="uid://dytt3cploxikh" path="res://scripts/game/gate.gd" id="14_1s4pk"]
+[ext_resource type="Texture2D" uid="uid://dwyuvwo1i6kwn" path="res://assets/object_sprites/filter_1_3.png" id="15_7nomh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e2o6t"]
 texture = ExtResource("6_x2xxo")
@@ -102,7 +105,7 @@ position = Vector2(160, 96)
 tile_set = SubResource("TileSet_feb5d")
 
 [node name="MultiSource" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-48, -40)
+position = Vector2(-64, -48)
 texture = ExtResource("7_2cbcq")
 script = ExtResource("8_isj1j")
 intensity_1 = 1
@@ -111,24 +114,41 @@ intensity_2 = 1
 polar_2 = 90
 color_2 = 3
 
+[node name="SingleSource" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(64, -48)
+texture = ExtResource("5_2aecg")
+script = ExtResource("8_6dial")
+intensity = 1
+polar = 45
+color = 1
+dir = 1
+metadata/_custom_type_script = "uid://chhdq05d72ddm"
+
 [node name="Filter" type="Sprite2D" parent="ObjectTiles"]
-visible = false
-position = Vector2(0, -16)
+position = Vector2(32, -32)
 texture = ExtResource("7_2os1m")
 script = ExtResource("10_tr1x6")
-polar = 90
+dir = 1
 
 [node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(48, 8)
 texture = ExtResource("11_d5akn")
 script = ExtResource("12_wbtxt")
 
-[node name="Junction" type="Sprite2D" parent="ObjectTiles"]
+[node name="Gate" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(0, -16)
-texture = ExtResource("11_7gny6")
-script = ExtResource("11_go7sj")
-in_dirs = Array[int]([0])
-out_dirs = Array[int]([1, 3, 0])
+texture = ExtResource("13_7nomh")
+script = ExtResource("14_1s4pk")
+req_1_dir = 1
+req_1_color = 1
+req_1_min_intensity = 0.3
+req_1_min_polar = 90
+req_1_max_polar = 100
+
+[node name="Filter2" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(-32, -32)
+texture = ExtResource("15_7nomh")
+script = ExtResource("10_tr1x6")
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(160, 90)

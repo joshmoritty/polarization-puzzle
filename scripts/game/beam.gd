@@ -90,3 +90,4 @@ func delete():
 	for section in sections:
 		section.queue_free()
 	sections = []
+	controller.free_mesh_coord(mesh_coord)

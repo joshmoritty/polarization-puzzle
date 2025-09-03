@@ -2,7 +2,7 @@ class_name Controller
 extends Node2D
 
 var objs: Dictionary[Vector2i, LightObject] = {}
-var beam_n = 0
+var beams_used: Array[bool] = []
 var _outline_shader := load("res://assets/2d_outline.gdshader")
 var _active_filter: Filter = null
 var _hovered_sprite: CanvasItem = null
@@ -16,6 +16,9 @@ var _hovered_sprite: CanvasItem = null
 @onready var fd_value: Label = filter_dialog.get_node("MarginContainer/VBox/Value") as Label
 
 func _ready():
+	for i in range(25):
+		beams_used.push_back(false)
+		
 	for pos in objs:
 		var obj = objs[pos]
 		if obj is Source:
@@ -115,9 +118,15 @@ func _max_y_hit(hits: Array[Dictionary]):
 	return max_obj
 
 func get_next_mesh_coord():
-	var mesh_coord = Vector2i(beam_n / 5, beam_n % 5)
-	beam_n += 1
-	return mesh_coord
+	for i in range(beams_used.size()):
+		if !beams_used[i]:
+			beams_used[i] = true
+			var mesh_coord = Vector2i(i / 5, i % 5)
+			return mesh_coord
+
+func free_mesh_coord(coord: Vector2i):
+	var i = coord.x * 5 + coord.y
+	beams_used[i] = false
 
 static func dir_to_vec(dir: LightData.Dir):
 	match dir:

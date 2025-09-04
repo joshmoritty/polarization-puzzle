@@ -10,8 +10,6 @@ var _hovered_sprites: Array[CanvasItem] = []
 @onready var tilemap: TileMapLayer = %"ObjectTiles"
 @onready var view: SubViewport = %"SubViewport"
 @onready var gui: CanvasLayer = %"GUI"
-@onready var label: Label = gui.get_node("%HoverReadout")
-@onready var hover_name: Label = gui.get_node("%HoverName")
 @onready var hover_panel: PanelContainer = gui.get_node("%HoverPanel")
 @onready var objectives_label: Label = gui.get_node("%Objectives")
 @onready var filter_dialog: Control = gui.get_node("%FilterDialog")
@@ -48,8 +46,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			hover_panel.visible = false
 		return
 
-	# Update UI readout on hover via physics point query; clear when none
-	if event is InputEventMouseMotion and label:
+	# Update UI readout on hover via physics point query; delegate to HoverPanel
+	if event is InputEventMouseMotion and hover_panel:
 		var space_state := get_world_2d().direct_space_state
 		var params := PhysicsPointQueryParameters2D.new()
 		# Use world coordinates for physics queries
@@ -60,7 +58,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		params.collide_with_bodies = false
 
 		var results := space_state.intersect_point(params, 16)
-		var text_out := ""
 		# Find the position with the lowest y among hits, then collect items at that position
 		var selected_pos: Vector2
 		var max_y := -INF
@@ -88,58 +85,9 @@ func _unhandled_input(event: InputEvent) -> void:
 						selected_beams.append(parent)
 					elif parent is LightObject:
 						selected_objs.append(parent)
-		# Build text: object info first (single top-most if multiple at same pos)
-		if selected_objs.size() > 0:
-			var top_obj: LightObject = selected_objs[0]
-			if top_obj and top_obj.has_method("get_hover_info"):
-				var obj_txt := top_obj.get_hover_info()
-				if obj_txt != "":
-					text_out = obj_txt
-		# Then beams: sort by LightData.compare and append all from same pos
-		if selected_beams.size() > 0:
-			selected_beams.sort_custom(func(a, b): return LightData.compare(a.beam.data, b.beam.data))
-			var lines: Array[String] = []
-			for bs in selected_beams:
-				var s := bs.get_hover_info()
-				if s != "":
-					lines.append(s)
-			if lines.size() > 0:
-				if text_out != "":
-					text_out += "\n\n"
-				text_out += "\n---\n".join(lines)
-				hover_name.text = "Light"
-		label.text = text_out
+		# Delegate building and displaying content to HoverPanel
+		(hover_panel as Node).call_deferred("update_from_selection", selected_objs, selected_beams)
 
-		# Update hover name and panel visibility
-		var any_hover := selected_objs.size() > 0 or selected_beams.size() > 0
-		if hover_panel:
-			hover_panel.visible = any_hover
-		if hover_name:
-			var name_text := ""
-			if selected_objs.size() > 0:
-				var top_obj: Node = selected_objs[0]
-				if top_obj is Filter:
-					name_text = "Polarizing Filter"
-				elif top_obj is Source or top_obj is MultiSource or top_obj is SingleSource:
-					name_text = "Light Source"
-				elif top_obj is Sensor:
-					name_text = "Sensor"
-				elif top_obj is Gate:
-					name_text = "Gate "
-					if top_obj.open:
-						name_text += "(Open)"
-					else:
-						name_text += "(Closed)"
-				elif top_obj is Junction:
-					if top_obj.in_dirs.size() == 1 and top_obj.out_dirs.size() == 1:
-						name_text = "Mirror"
-					elif top_obj.in_dirs.size() == 1:
-						name_text = "Splitter"
-					else:
-						name_text = "Merger"
-				else:
-					name_text = top_obj.get_class()
-				hover_name.text = name_text
 		# Apply/remove outline shader: outline all selected beam sections; otherwise top-most item
 		# Clear previous outlines
 		for ci in _hovered_sprites:

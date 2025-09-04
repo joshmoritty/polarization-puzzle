@@ -26,6 +26,7 @@ func set_content(title: String, body: String) -> void:
 	if name_label:
 		name_label.text = title
 	if readout_label:
+		readout_label.visible = body != ""
 		readout_label.text = body
 
 func update_from_selection(selected_objs: Array, selected_beams: Array) -> void:

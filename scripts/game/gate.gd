@@ -61,12 +61,12 @@ func _update_sprite():
 
 func get_hover_info() -> String:
 	var blocks: Array[String] = []
-	blocks.append("Open" if open else "Closed")
+	blocks.append("REQUIRES:")
 	# Requirement 1 summary
 	var r1_req := Requirement.new(req_1_dir, req_1_color, req_1_min_intensity, req_1_min_polar, req_1_max_polar, false)
-	blocks.append(r1_req.format_summary())
+	blocks.append("Direction: %s\n%s" % [LightData.dir_to_string(req_1_dir), r1_req.format_summary()])
 	# Requirement 2 if used
 	if req_2_used:
 		var r2_req := Requirement.new(req_2_dir, req_2_color, req_2_min_intensity, req_2_min_polar, req_2_max_polar, false)
-		blocks.append(r2_req.format_summary())
-	return "\n\n".join(blocks)
+		blocks.append("Direction: %s\n%s" % [LightData.dir_to_string(req_2_dir), r2_req.format_summary()])
+	return "\n".join(blocks)

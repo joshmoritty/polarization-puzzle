@@ -10,14 +10,16 @@ var _hovered_sprites: Array[CanvasItem] = []
 @onready var tilemap: TileMapLayer = %"ObjectTiles"
 @onready var view: SubViewport = %"SubViewport"
 @onready var gui: CanvasLayer = %"GUI"
-@onready var label: Label = gui.get_node("MarginContainer/HoverReadout")
-@onready var objectives_label: Label = gui.get_node("MarginContainer/Objectives")
-@onready var filter_dialog: Control = gui.get_node("MarginContainer/FilterDialog")
-@onready var fd_slider: HSlider = filter_dialog.get_node("MarginContainer/VBox/Slider") as HSlider
-@onready var fd_value: Label = filter_dialog.get_node("MarginContainer/VBox/Value") as Label
-@onready var finish_dialog: PanelContainer = gui.get_node("MarginContainer/FinishDialog")
-@onready var finish_continue: Button = finish_dialog.get_node("MarginContainer/VBox/HBox/Continue")
-@onready var finish_main_menu: Button = finish_dialog.get_node("MarginContainer/VBox/HBox/MainMenu")
+@onready var label: Label = gui.get_node("%HoverReadout")
+@onready var hover_name: Label = gui.get_node("%HoverName")
+@onready var hover_panel: PanelContainer = gui.get_node("%HoverPanel")
+@onready var objectives_label: Label = gui.get_node("%Objectives")
+@onready var filter_dialog: Control = gui.get_node("%FilterDialog")
+@onready var fd_slider: HSlider = filter_dialog.get_node("%Slider") as HSlider
+@onready var fd_value: Label = filter_dialog.get_node("%Value") as Label
+@onready var finish_dialog: PanelContainer = gui.get_node("%FinishDialog")
+@onready var finish_continue: Button = finish_dialog.get_node("%Continue")
+@onready var finish_main_menu: Button = finish_dialog.get_node("%MainMenu")
 
 func _ready():
 	for i in range(25):
@@ -41,6 +43,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			var rect := filter_dialog.get_global_rect()
 			if not rect.has_point(get_viewport().get_mouse_position()):
 				_close_filter_dialog()
+		# Hide hover panel when dialog is open
+		if hover_panel:
+			hover_panel.visible = false
 		return
 
 	# Update UI readout on hover via physics point query; clear when none
@@ -102,7 +107,39 @@ func _unhandled_input(event: InputEvent) -> void:
 				if text_out != "":
 					text_out += "\n\n"
 				text_out += "\n---\n".join(lines)
+				hover_name.text = "Light"
 		label.text = text_out
+
+		# Update hover name and panel visibility
+		var any_hover := selected_objs.size() > 0 or selected_beams.size() > 0
+		if hover_panel:
+			hover_panel.visible = any_hover
+		if hover_name:
+			var name_text := ""
+			if selected_objs.size() > 0:
+				var top_obj: Node = selected_objs[0]
+				if top_obj is Filter:
+					name_text = "Polarizing Filter"
+				elif top_obj is Source or top_obj is MultiSource or top_obj is SingleSource:
+					name_text = "Light Source"
+				elif top_obj is Sensor:
+					name_text = "Sensor"
+				elif top_obj is Gate:
+					name_text = "Gate "
+					if top_obj.open:
+						name_text += "(Open)"
+					else:
+						name_text += "(Closed)"
+				elif top_obj is Junction:
+					if top_obj.in_dirs.size() == 1 and top_obj.out_dirs.size() == 1:
+						name_text = "Mirror"
+					elif top_obj.in_dirs.size() == 1:
+						name_text = "Splitter"
+					else:
+						name_text = "Merger"
+				else:
+					name_text = top_obj.get_class()
+				hover_name.text = name_text
 		# Apply/remove outline shader: outline all selected beam sections; otherwise top-most item
 		# Clear previous outlines
 		for ci in _hovered_sprites:
@@ -222,7 +259,7 @@ func _update_objectives():
 					all_met = false
 	var text := ""
 	if all_reqs.size() > 0:
-		text = "Objectives:\n" + ("\n---\n".join(all_reqs))
+		text = "\n---\n".join(all_reqs)
 	objectives_label.text = text
 	if all_met and all_reqs.size() > 0:
 		_show_finish_dialog()

@@ -2,7 +2,6 @@ class_name Sensor
 extends LightObject
 
 @export var dir: LightData.Dir
-@onready var label: Label = %"GUI".get_node("MarginContainer/SensorReadout")
 
 @export var min_polar: int
 @export var max_polar: int
@@ -46,7 +45,7 @@ func get_requirements() -> Array[Requirement]:
 
 func get_hover_info() -> String:
 	if beams_in.size() == 0:
-		return ""
+		return "No Input"
 	
 	beams_in.sort_custom(func(a, b): return LightData.compare(a.data, b.data))
 

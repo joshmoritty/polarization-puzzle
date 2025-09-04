@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=2 format=3 uid="uid://cc6axt01mdjls"]
 
-[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="1_av2uu"]
+[ext_resource type="FontFile" uid="uid://d4cwb3arurxll" path="res://assets/fonts/ari-w9500.ttf" id="1_av2uu"]
 
 [resource]
 Label/colors/font_color = Color(0.360784, 0.376471, 0.305882, 1)

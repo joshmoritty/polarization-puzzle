@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b7majbdgh2of0"
-path="res://.godot/imported/Minecraftia-Regular.ttf-0514a1b9dec5a289b631efb56490ae6f.fontdata"
+uid="uid://d4cwb3arurxll"
+path="res://.godot/imported/ari-w9500.ttf-9ad22d17247e61e361c964997b610cf6.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/Minecraftia-Regular.ttf"
-dest_files=["res://.godot/imported/Minecraftia-Regular.ttf-0514a1b9dec5a289b631efb56490ae6f.fontdata"]
+source_file="res://assets/fonts/ari-w9500.ttf"
+dest_files=["res://.godot/imported/ari-w9500.ttf-9ad22d17247e61e361c964997b610cf6.fontdata"]
 
 [params]
 

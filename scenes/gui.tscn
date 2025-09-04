@@ -1,19 +1,23 @@
-[gd_scene load_steps=6 format=3 uid="uid://c33juruhhvftm"]
+[gd_scene load_steps=7 format=3 uid="uid://c33juruhhvftm"]
 
-[ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="1_mfius"]
-[ext_resource type="Theme" uid="uid://d1av2ellnc52n" path="res://assets/themes/filter_dialog.tres" id="2_ynd5l"]
+[ext_resource type="FontFile" uid="uid://d4cwb3arurxll" path="res://assets/fonts/ari-w9500.ttf" id="1_ynd5l"]
+[ext_resource type="FontFile" uid="uid://g2fs3sapskof" path="res://assets/fonts/ari-w9500-display.ttf" id="3_b8iy7"]
 [ext_resource type="Theme" uid="uid://u4e86n2ats8n" path="res://assets/themes/menu.tres" id="3_ynd5l"]
 
 [sub_resource type="Theme" id="Theme_mfius"]
-MarginContainer/constants/margin_bottom = 6
-MarginContainer/constants/margin_left = 6
-MarginContainer/constants/margin_right = 6
-MarginContainer/constants/margin_top = 6
+Label/font_sizes/font_size = 33
+Label/fonts/font = ExtResource("1_ynd5l")
+MarginContainer/constants/margin_bottom = 20
 
-[sub_resource type="LabelSettings" id="LabelSettings_p57ef"]
-line_spacing = 0.0
-font = ExtResource("1_mfius")
-font_size = 8
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynd5l"]
+bg_color = Color(0, 0, 0, 0.501961)
+
+[sub_resource type="Theme" id="Theme_b8iy7"]
+MarginContainer/constants/margin_bottom = 16
+MarginContainer/constants/margin_left = 16
+MarginContainer/constants/margin_right = 16
+MarginContainer/constants/margin_top = 16
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_ynd5l")
 
 [node name="GUI" type="CanvasLayer"]
 
@@ -25,33 +29,63 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_mfius")
 
-[node name="SensorReadout" type="Label" parent="MarginContainer"]
+[node name="HoverPanel" type="PanelContainer" parent="MarginContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
+size_flags_horizontal = 8
 size_flags_vertical = 0
-label_settings = SubResource("LabelSettings_p57ef")
+theme = SubResource("Theme_b8iy7")
 
-[node name="HoverReadout" type="Label" parent="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HoverPanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HoverPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="HoverName" type="Label" parent="MarginContainer/HoverPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 0
-label_settings = SubResource("LabelSettings_p57ef")
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_b8iy7")
 horizontal_alignment = 2
 
-[node name="Objectives" type="Label" parent="MarginContainer"]
+[node name="HoverReadout" type="Label" parent="MarginContainer/HoverPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
-label_settings = SubResource("LabelSettings_p57ef")
+horizontal_alignment = 2
+
+[node name="ObjectivePanel" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = SubResource("Theme_b8iy7")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ObjectivePanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ObjectivePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/ObjectivePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_fonts/font = ExtResource("3_b8iy7")
+text = "Goals"
+
+[node name="Objectives" type="Label" parent="MarginContainer/ObjectivePanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
 
 [node name="FilterDialog" type="PanelContainer" parent="MarginContainer"]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme = ExtResource("2_ynd5l")
+theme = ExtResource("3_ynd5l")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/FilterDialog"]
 layout_mode = 2
@@ -95,6 +129,7 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="MarginContainer/FinishDialog/MarginContainer/VBox"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_b8iy7")
 text = "Level Finished"
 horizontal_alignment = 1
 

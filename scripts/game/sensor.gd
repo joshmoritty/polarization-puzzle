@@ -7,6 +7,8 @@ extends LightObject
 @export var max_polar: int
 @export var use_total_intensity: bool
 @export var min_total_intensity: float
+@export var use_color: bool = true
+@export var use_polar: bool = true
 
 @export_group("Requirement 1")
 @export var req_1_color: LightColor.LightColorEnum
@@ -28,18 +30,18 @@ func _process_light():
 func get_requirements() -> Array[Requirement]:
 	var reqs: Array[Requirement] = []
 	if use_total_intensity:
-		# Single aggregated requirement with color = null, min intensity = min_total_intensity
-		var r_total = Requirement.new(dir, null, min_total_intensity, min_polar, max_polar, true)
+		# Single aggregated requirement ignoring color and/or polar per flags
+		var r_total = Requirement.new(dir, req_1_color, min_total_intensity, min_polar, max_polar, true, use_color, use_polar)
 		reqs.append(r_total)
 		return reqs
 	# Otherwise, build per-color requirements with individual min intensities
-	var r1 = Requirement.new(dir, req_1_color, req_1_min_intensity, min_polar, max_polar, false)
+	var r1 = Requirement.new(dir, req_1_color, req_1_min_intensity, min_polar, max_polar, false, use_color, use_polar)
 	reqs.append(r1)
 	if req_2_used:
-		var r2 = Requirement.new(dir, req_2_color, req_2_min_intensity, min_polar, max_polar, false)
+		var r2 = Requirement.new(dir, req_2_color, req_2_min_intensity, min_polar, max_polar, false, use_color, use_polar)
 		reqs.append(r2)
 	if req_3_used:
-		var r3 = Requirement.new(dir, req_3_color, req_3_min_intensity, min_polar, max_polar, false)
+		var r3 = Requirement.new(dir, req_3_color, req_3_min_intensity, min_polar, max_polar, false, use_color, use_polar)
 		reqs.append(r3)
 	return reqs
 

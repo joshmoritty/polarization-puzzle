@@ -1,20 +1,17 @@
-[gd_scene load_steps=19 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=16 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/game/controller.gd" id="1_7gny6"]
 [ext_resource type="PackedScene" uid="uid://c33juruhhvftm" path="res://scenes/gui.tscn" id="2_2os1m"]
+[ext_resource type="PackedScene" uid="uid://m30priism7yw" path="res://scenes/levels/level_2.tscn" id="2_dnkej"]
+[ext_resource type="Script" uid="uid://pjnf8tkpi0ks" path="res://scripts/game/gui.gd" id="3_1s4pk"]
 [ext_resource type="PackedScene" uid="uid://c5jeh6aawd8mg" path="res://scenes/sub_viewport.tscn" id="4_go7sj"]
-[ext_resource type="Texture2D" uid="uid://23070kqlihql" path="res://assets/object_sprites/source_2.png" id="5_2aecg"]
 [ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="6_x2xxo"]
 [ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_1.png" id="7_2cbcq"]
-[ext_resource type="Texture2D" uid="uid://to24do51lhxf" path="res://assets/object_sprites/filter_2_4.png" id="7_2os1m"]
-[ext_resource type="Script" uid="uid://chhdq05d72ddm" path="res://scripts/game/single_source.gd" id="8_6dial"]
 [ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/game/multi_source.gd" id="8_isj1j"]
 [ext_resource type="Script" uid="uid://nsybol5vh4m7" path="res://scripts/game/filter.gd" id="10_tr1x6"]
 [ext_resource type="Texture2D" uid="uid://bsjkegad250wb" path="res://assets/object_sprites/sensor_1.png" id="11_d5akn"]
 [ext_resource type="Script" uid="uid://4kueu8k0s2jv" path="res://scripts/game/sensor.gd" id="12_wbtxt"]
-[ext_resource type="Texture2D" uid="uid://c8tsc7jumqrns" path="res://assets/object_sprites/gate_1_4.png" id="13_7nomh"]
 [ext_resource type="Script" uid="uid://ccipymiuceyxj" path="res://scripts/game/camera.gd" id="13_x2fux"]
-[ext_resource type="Script" uid="uid://dytt3cploxikh" path="res://scripts/game/gate.gd" id="14_1s4pk"]
 [ext_resource type="Texture2D" uid="uid://dwyuvwo1i6kwn" path="res://assets/object_sprites/filter_1_3.png" id="15_7nomh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e2o6t"]
@@ -82,11 +79,19 @@ tile_offset_axis = 1
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_e2o6t")
 
-[node name="Root" type="Node2D"]
+[node name="Level" type="Node2D"]
 script = ExtResource("1_7gny6")
+next_level = ExtResource("2_dnkej")
 
 [node name="GUI" parent="." instance=ExtResource("2_2os1m")]
 unique_name_in_owner = true
+visible = false
+script = ExtResource("3_1s4pk")
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(160, 90)
+zoom = Vector2(4, 4)
+script = ExtResource("13_x2fux")
 
 [node name="SubViewport" parent="." instance=ExtResource("4_go7sj")]
 unique_name_in_owner = true
@@ -102,60 +107,28 @@ tile_set = SubResource("TileSet_feb5d")
 unique_name_in_owner = true
 y_sort_enabled = true
 position = Vector2(160, 96)
+tile_map_data = PackedByteArray("AAD6//z/AAADAAAAAAD7//z/AAADAAAAAAD8//z/AAADAAAAAAD9//z/AAADAAAAAAD+//z/AAADAAAAAAD///z/AAADAAAAAAAAAPz/AAADAAAAAAABAPz/AAADAAAAAAACAPz/AAADAAAAAAD6//v/AAAAAAAAAAD7//v/AAAAAAAAAAD8//v/AAAAAAAAAAD9//v/AAAAAAAAAAD+//v/AAAAAAAAAAD///v/AAAAAAAAAAABAPv/AAAAAAAAAAAAAPv/AAAAAAAAAAACAPv/AAAAAAAAAAD6/wMAAAAAAAAAAAD7/wMAAAAAAAAAAAD8/wMAAAAAAAAAAAD9/wMAAAAAAAAAAAD+/wMAAAAAAAAAAAD//wMAAAAAAAAAAAAAAAMAAAAAAAAAAAABAAMAAAAAAAAAAAACAAMAAAAAAAAAAAACAAIAAAACAAEAAAA=")
 tile_set = SubResource("TileSet_feb5d")
 
 [node name="MultiSource" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-64, -48)
+position = Vector2(-48, -40)
 texture = ExtResource("7_2cbcq")
 script = ExtResource("8_isj1j")
 intensity_1 = 1
-enabled_2 = true
-intensity_2 = 1
-polar_2 = 90
-color_2 = 3
-
-[node name="SingleSource" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(64, -48)
-texture = ExtResource("5_2aecg")
-script = ExtResource("8_6dial")
-intensity = 1
-polar = 45
-color = 1
-dir = 1
-metadata/_custom_type_script = "uid://chhdq05d72ddm"
-
-[node name="Filter" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(32, -32)
-texture = ExtResource("7_2os1m")
-script = ExtResource("10_tr1x6")
-dir = 1
+polar_1 = 135
+color_1 = 1
 
 [node name="Sensor" type="Sprite2D" parent="ObjectTiles"]
 position = Vector2(48, 8)
 texture = ExtResource("11_d5akn")
 script = ExtResource("12_wbtxt")
-min_polar = 85
-max_polar = 90
-use_total_intensity = true
-min_total_intensity = 0.6
-req_1_min_intensity = 0.5
-
-[node name="Gate" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(0, -16)
-texture = ExtResource("13_7nomh")
-script = ExtResource("14_1s4pk")
-req_1_dir = 1
+min_polar = 80
+max_polar = 100
 req_1_color = 1
-req_1_min_intensity = 0.3
-req_1_min_polar = 90
-req_1_max_polar = 100
+req_1_min_intensity = 0.45
 
-[node name="Filter2" type="Sprite2D" parent="ObjectTiles"]
-position = Vector2(-32, -32)
+[node name="Filter" type="Sprite2D" parent="ObjectTiles"]
+position = Vector2(0, -16)
 texture = ExtResource("15_7nomh")
 script = ExtResource("10_tr1x6")
-
-[node name="Camera" type="Camera2D" parent="."]
-position = Vector2(160, 90)
-zoom = Vector2(4, 4)
-script = ExtResource("13_x2fux")
+metadata/_custom_type_script = "uid://nsybol5vh4m7"

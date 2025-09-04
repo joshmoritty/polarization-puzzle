@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cdk1k0f0rcwuj"]
+[gd_scene load_steps=8 format=3 uid="uid://cdk1k0f0rcwuj"]
 
 [ext_resource type="Theme" uid="uid://cc6axt01mdjls" path="res://assets/themes/main_menu.tres" id="1_ekxnf"]
 [ext_resource type="FontFile" uid="uid://g2fs3sapskof" path="res://assets/fonts/ari-w9500-display.ttf" id="2_bqqt6"]
 [ext_resource type="Theme" uid="uid://u4e86n2ats8n" path="res://assets/themes/menu.tres" id="3_8ln24"]
 [ext_resource type="Script" uid="uid://oatv5n804voo" path="res://scripts/main_menu/play.gd" id="3_bqqt6"]
 [ext_resource type="Script" uid="uid://ov0h472ytv36" path="res://scripts/main_menu/exit.gd" id="4_wu84c"]
+[ext_resource type="PackedScene" uid="uid://c2bso81u5xov" path="res://scenes/levels/level_1.tscn" id="5_rtw2f"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
 line_spacing = -3.0
@@ -48,6 +49,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Play"
 script = ExtResource("3_bqqt6")
+first_level = ExtResource("5_rtw2f")
 
 [node name="LevelSelect" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2

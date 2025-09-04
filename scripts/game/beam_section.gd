@@ -31,6 +31,9 @@ func _ready() -> void:
 	poly.polygon = POLY_POINTS
 	poly.position = Vector2(-6, -18)
 	area.add_child(poly)
+	
+	if beam.data.dir == LightData.Dir.UP_RIGHT or beam.data.dir == LightData.Dir.DOWN_LEFT:
+		area.scale.x = -1
 
 func get_hover_info() -> String:
 	if beam and beam.data:

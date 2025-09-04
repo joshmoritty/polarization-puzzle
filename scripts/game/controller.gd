@@ -18,6 +18,7 @@ var _hovered_sprites: Array[CanvasItem] = []
 @onready var finish_dialog: PanelContainer = gui.get_node("%FinishDialog")
 @onready var finish_continue: Button = finish_dialog.get_node("%Continue")
 @onready var finish_main_menu: Button = finish_dialog.get_node("%MainMenu")
+@export var next_level: PackedScene
 
 func _ready():
 	for i in range(25):
@@ -217,10 +218,9 @@ func _show_finish_dialog():
 		finish_dialog.visible = true
 
 func _on_finish_continue():
-	# Placeholder: hook into your level loading system
-	# For now, just hide the dialog
 	if finish_dialog:
 		finish_dialog.visible = false
+		get_tree().change_scene_to_packed(next_level)
 
 func _on_finish_main_menu():
 	if finish_dialog:

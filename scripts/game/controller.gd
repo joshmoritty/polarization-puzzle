@@ -11,9 +11,13 @@ var _hovered_sprites: Array[CanvasItem] = []
 @onready var view: SubViewport = %"SubViewport"
 @onready var gui: CanvasLayer = %"GUI"
 @onready var label: Label = gui.get_node("MarginContainer/HoverReadout")
+@onready var objectives_label: Label = gui.get_node("MarginContainer/Objectives")
 @onready var filter_dialog: Control = gui.get_node("MarginContainer/FilterDialog")
 @onready var fd_slider: HSlider = filter_dialog.get_node("MarginContainer/VBox/Slider") as HSlider
 @onready var fd_value: Label = filter_dialog.get_node("MarginContainer/VBox/Value") as Label
+@onready var finish_dialog: PanelContainer = gui.get_node("MarginContainer/FinishDialog")
+@onready var finish_continue: Button = finish_dialog.get_node("MarginContainer/VBox/HBox/Continue")
+@onready var finish_main_menu: Button = finish_dialog.get_node("MarginContainer/VBox/HBox/MainMenu")
 
 func _ready():
 	for i in range(25):
@@ -23,6 +27,12 @@ func _ready():
 		var obj = objs[pos]
 		if obj is Source:
 			obj.build_beams()
+
+	# Connect finish dialog buttons once
+	if finish_continue and not finish_continue.pressed.is_connected(_on_finish_continue):
+		finish_continue.pressed.connect(_on_finish_continue)
+	if finish_main_menu and not finish_main_menu.pressed.is_connected(_on_finish_main_menu):
+		finish_main_menu.pressed.connect(_on_finish_main_menu)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# When dialog open, suppress hover readout and allow outside-click close
@@ -118,6 +128,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				to_outline.material = mat2
 				_hovered_sprites.append(to_outline)
 
+	# After input handling, update objectives each motion event for responsiveness
+	_update_objectives()
+
 	# Open/retarget filter dialog on left click
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var space_state := get_world_2d().direct_space_state
@@ -190,3 +203,41 @@ func register_obj(obj: Node2D):
 	var tilepos = tilemap.local_to_map(obj.position)
 	objs.set(tilepos, obj)
 	return tilepos
+
+func _update_objectives():
+	if not objectives_label:
+		return
+	var all_reqs: Array[String] = []
+	var all_met := true
+	# Build objectives text from all Sensor requirements
+	for pos in objs:
+		var obj = objs[pos]
+		if obj is Sensor:
+			var sensor := obj as Sensor
+			var reqs := sensor.get_requirements()
+			for r in reqs:
+				all_reqs.append(r.format_summary())
+				var met := r.is_successful(sensor.beams_in)
+				if not met:
+					all_met = false
+	var text := ""
+	if all_reqs.size() > 0:
+		text = "Objectives:\n" + ("\n---\n".join(all_reqs))
+	objectives_label.text = text
+	if all_met and all_reqs.size() > 0:
+		_show_finish_dialog()
+
+func _show_finish_dialog():
+	if finish_dialog and not finish_dialog.visible:
+		finish_dialog.visible = true
+
+func _on_finish_continue():
+	# Placeholder: hook into your level loading system
+	# For now, just hide the dialog
+	if finish_dialog:
+		finish_dialog.visible = false
+
+func _on_finish_main_menu():
+	if finish_dialog:
+		finish_dialog.visible = false
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

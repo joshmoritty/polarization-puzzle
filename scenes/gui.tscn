@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c33juruhhvftm"]
+[gd_scene load_steps=6 format=3 uid="uid://c33juruhhvftm"]
 
 [ext_resource type="FontFile" uid="uid://b7majbdgh2of0" path="res://assets/fonts/Minecraftia-Regular.ttf" id="1_mfius"]
 [ext_resource type="Theme" uid="uid://d1av2ellnc52n" path="res://assets/themes/filter_dialog.tres" id="2_ynd5l"]
+[ext_resource type="Theme" uid="uid://u4e86n2ats8n" path="res://assets/themes/menu.tres" id="3_ynd5l"]
 
 [sub_resource type="Theme" id="Theme_mfius"]
 MarginContainer/constants/margin_bottom = 6
@@ -38,6 +39,12 @@ size_flags_vertical = 0
 label_settings = SubResource("LabelSettings_p57ef")
 horizontal_alignment = 2
 
+[node name="Objectives" type="Label" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+label_settings = SubResource("LabelSettings_p57ef")
+
 [node name="FilterDialog" type="PanelContainer" parent="MarginContainer"]
 unique_name_in_owner = true
 visible = false
@@ -71,3 +78,36 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
+
+[node name="FinishDialog" type="PanelContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = ExtResource("3_ynd5l")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/FinishDialog"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/FinishDialog/MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/FinishDialog/MarginContainer/VBox"]
+layout_mode = 2
+text = "Level Finished"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/FinishDialog/MarginContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="MainMenu" type="Button" parent="MarginContainer/FinishDialog/MarginContainer/VBox/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Main Menu"
+
+[node name="Continue" type="Button" parent="MarginContainer/FinishDialog/MarginContainer/VBox/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Next Level"

@@ -13,12 +13,39 @@ var center: Vector2
 var radius: float
 var last_mouse_pos: Vector2
 
+# Outline shader materials
+var _filter_outline_shader: Shader
+var _2d_outline_shader: Shader
+var _filter_outline_material: ShaderMaterial
+var _hover_outline_material: ShaderMaterial
+var _original_material: Material
+var _is_hovered: bool = false
+
 func _ready():
 	custom_minimum_size = Vector2(200, 200)
+	
+	# Load outline shaders
+	_filter_outline_shader = load("res://assets/shaders/filter_outline.gdshader")
+	_2d_outline_shader = load("res://assets/shaders/2d_outline.gdshader")
+	
+	# Create shader materials
+	_filter_outline_material = ShaderMaterial.new()
+	_filter_outline_material.shader = _filter_outline_shader
+	
+	_hover_outline_material = ShaderMaterial.new()
+	_hover_outline_material.shader = _2d_outline_shader
+	
+	# Store original material
+	_original_material = material
+	
+	# Set initial outline (filter outline when not hovered)
+	material = _filter_outline_material
 	
 	# Connect signals
 	gui_input.connect(_on_gui_input)
 	resized.connect(_resized)
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 	
 	# Initialize center and radius
 	_resized()
@@ -114,3 +141,13 @@ func _draw():
 	
 	# Reset transform
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+func _on_mouse_entered():
+	_is_hovered = true
+	# Switch to hover outline (2d_outline)
+	material = _hover_outline_material
+
+func _on_mouse_exited():
+	_is_hovered = false
+	# Switch back to filter outline
+	material = _filter_outline_material

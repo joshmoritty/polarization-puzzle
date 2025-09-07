@@ -96,8 +96,8 @@ visible = false
 script = ExtResource("3_cfbu6")
 
 [node name="Camera" type="Camera2D" parent="."]
-position = Vector2(160, 90)
-zoom = Vector2(4, 4)
+position = Vector2(232, 112)
+zoom = Vector2(3, 3)
 script = ExtResource("4_bvftm")
 
 [node name="SubViewport" parent="." instance=ExtResource("5_4fymt")]

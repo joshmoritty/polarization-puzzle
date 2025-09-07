@@ -84,7 +84,7 @@ tile_offset_axis = 1
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_e2o6t")
 
-[node name="Level" type="Node2D"]
+[node name="Level2" type="Node2D"]
 script = ExtResource("1_gruok")
 next_level = ExtResource("2_l8eod")
 
@@ -94,8 +94,8 @@ visible = false
 script = ExtResource("3_l8eod")
 
 [node name="Camera" type="Camera2D" parent="."]
-position = Vector2(160, 90)
-zoom = Vector2(4, 4)
+position = Vector2(232, 112)
+zoom = Vector2(3, 3)
 script = ExtResource("4_sfnul")
 
 [node name="SubViewport" parent="." instance=ExtResource("5_fea5r")]

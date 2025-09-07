@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cdk1k0f0rcwuj"]
+[gd_scene load_steps=10 format=3 uid="uid://cdk1k0f0rcwuj"]
 
 [ext_resource type="Theme" uid="uid://cc6axt01mdjls" path="res://assets/themes/main_menu.tres" id="1_ekxnf"]
 [ext_resource type="FontFile" uid="uid://g2fs3sapskof" path="res://assets/fonts/ari-w9500-display.ttf" id="2_bqqt6"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://oatv5n804voo" path="res://scripts/main_menu/play.gd" id="3_bqqt6"]
 [ext_resource type="Script" uid="uid://ov0h472ytv36" path="res://scripts/main_menu/exit.gd" id="4_wu84c"]
 [ext_resource type="PackedScene" uid="uid://c2bso81u5xov" path="res://scenes/levels/level_1.tscn" id="5_rtw2f"]
+[ext_resource type="Script" uid="uid://sc5y3brdxbh1" path="res://scripts/main_menu/level_select_button.gd" id="6_level_select_script"]
+[ext_resource type="Script" uid="uid://bdb512a3x0k8k" path="res://scripts/main_menu/level_selector.gd" id="7_level_selector_script"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
 line_spacing = -3.0
@@ -54,8 +56,52 @@ first_level = ExtResource("5_rtw2f")
 [node name="LevelSelect" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Level Select"
+script = ExtResource("6_level_select_script")
 
 [node name="Exit" type="Button" parent="CenterContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Exit"
 script = ExtResource("4_wu84c")
+
+[node name="LevelSelector" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_level_selector_script")
+
+[node name="PanelContainer" type="PanelContainer" parent="LevelSelector"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_8ln24")
+
+[node name="MarginContainer" type="MarginContainer" parent="LevelSelector/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelector/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="LevelSelector/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select Level"
+horizontal_alignment = 1
+
+[node name="LevelGrid" type="GridContainer" parent="LevelSelector/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 3
+
+[node name="BackButton" type="Button" parent="LevelSelector/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back"

@@ -6,6 +6,7 @@ var beams_used: Array[bool] = []
 var _outline_shader := load("res://assets/shaders/2d_outline.gdshader")
 var _active_filter: Filter = null
 var _hovered_sprites: Array[CanvasItem] = []
+var _hovered_original_materials: Array[Material] = []
 @onready var ground = %"GroundTiles" as TileMapLayer
 @onready var tilemap: TileMapLayer = %"ObjectTiles"
 @onready var view: SubViewport = %"SubViewport"
@@ -89,15 +90,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		(hover_panel as Node).call_deferred("update_from_selection", selected_objs, selected_beams)
 
 		# Apply/remove outline shader: outline all selected beam sections; otherwise top-most item
-		# Clear previous outlines
-		for ci in _hovered_sprites:
-			if ci:
-				ci.material = null
+		# Clear previous outlines and restore original materials
+		for i in range(_hovered_sprites.size()):
+			if _hovered_sprites[i]:
+				_hovered_sprites[i].material = _hovered_original_materials[i]
 		_hovered_sprites.clear()
+		_hovered_original_materials.clear()
+		
 		if selected_beams.size() >= 2:
 			for bs in selected_beams:
 				var mat := ShaderMaterial.new()
 				mat.shader = _outline_shader
+				_hovered_original_materials.append(bs.material)
 				bs.material = mat
 				_hovered_sprites.append(bs)
 		else:
@@ -110,6 +114,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			if to_outline:
 				var mat2 := ShaderMaterial.new()
 				mat2.shader = _outline_shader
+				_hovered_original_materials.append(to_outline.material)
 				to_outline.material = mat2
 				_hovered_sprites.append(to_outline)
 

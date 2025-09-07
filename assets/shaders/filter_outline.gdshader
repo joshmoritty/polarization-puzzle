@@ -1,0 +1,31 @@
+shader_type canvas_item;
+
+uniform float thickness: hint_range(0.0, 5.0) = 1.0;
+uniform float pulse_speed: hint_range(0.1, 10.0) = 5.0;
+
+float is_solid(float value) {
+	return max(0.0, sign(value));
+}
+
+float has_solid_neighbor(sampler2D texture_sample, vec2 uv_coord, vec2 pixel_size) {
+	vec2 offset = thickness * pixel_size;
+	float sum_alpha = texture(texture_sample, uv_coord + vec2(1.0, 0.0) * offset).a
+		+ texture(texture_sample, uv_coord + vec2(-1.0, 0.0) * offset).a
+		+ texture(texture_sample, uv_coord + vec2(0.0, 1.0) * offset).a
+		+ texture(texture_sample, uv_coord + vec2(0.0, -1.0) * offset).a;
+	return is_solid(sum_alpha);
+}
+
+void fragment() {
+	if (abs(COLOR.a) < 0.0001) {
+		float outline_mask = has_solid_neighbor(TEXTURE, UV, TEXTURE_PIXEL_SIZE);
+		if (outline_mask > 0.0) {
+			// Pulsating between cyan and white
+			float pulse = sin(TIME * pulse_speed) * 0.5 + 0.5;
+			vec3 cyan = vec3(1.0, 1.0, 0.0);
+			vec3 white = vec3(1.0, 1.0, 1.0);
+			vec3 color = mix(cyan, white, pulse);
+			COLOR = vec4(color, 1.0);
+		}
+	}
+}

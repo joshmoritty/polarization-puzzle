@@ -4,6 +4,16 @@ extends LightObject
 @export var dir: LightData.Dir
 @export var polar: int
 
+var _filter_outline_shader := load("res://assets/shaders/filter_outline.gdshader")
+var _filter_outline_material: ShaderMaterial
+
+func _ready():
+	super._ready()
+	# Apply pulsating cyan-white outline
+	_filter_outline_material = ShaderMaterial.new()
+	_filter_outline_material.shader = _filter_outline_shader
+	material = _filter_outline_material
+
 func _process_light():
 	var lights_out: Array[LightData] = []
 

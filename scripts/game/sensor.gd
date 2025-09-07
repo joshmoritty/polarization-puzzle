@@ -24,6 +24,37 @@ extends LightObject
 @export var req_3_color: LightColor.LightColorEnum
 @export var req_3_min_intensity: float
 
+var _sensor_outline_shader := load("res://assets/shaders/sensor_outline.gdshader")
+var _sensor_outline_material: ShaderMaterial
+
+func _ready():
+	super._ready()
+	# Apply sensor outline (starts as red)
+	_sensor_outline_material = ShaderMaterial.new()
+	_sensor_outline_material.shader = _sensor_outline_shader
+	_sensor_outline_material.set_shader_parameter("outline_color", Color.RED)
+	material = _sensor_outline_material
+
+func _process(_delta):
+	# Update outline color based on requirement fulfillment
+	_update_outline_color()
+
+func _update_outline_color():
+	if not _sensor_outline_material:
+		return
+	
+	# Check if all requirements are fulfilled
+	var all_fulfilled = true
+	var reqs = get_requirements()
+	for req in reqs:
+		if not req.is_successful(beams_in):
+			all_fulfilled = false
+			break
+	
+	# Set outline color: green if all fulfilled, red if not
+	var outline_color = Color.GREEN if all_fulfilled else Color.RED
+	_sensor_outline_material.set_shader_parameter("outline_color", outline_color)
+
 func _process_light():
 	return []
 

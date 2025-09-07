@@ -1,6 +1,8 @@
 extends Control
 
 func _ready() -> void:
+	# Make the container ignore mouse input so it doesn't interfere with game interaction
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_generate_panels()
 
 func _generate_panels() -> void:

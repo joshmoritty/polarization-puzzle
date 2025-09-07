@@ -1,10 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://c33juruhhvftm"]
+[gd_scene load_steps=13 format=3 uid="uid://c33juruhhvftm"]
 
 [ext_resource type="FontFile" uid="uid://d4cwb3arurxll" path="res://assets/fonts/ari-w9500.ttf" id="1_ynd5l"]
 [ext_resource type="FontFile" uid="uid://g2fs3sapskof" path="res://assets/fonts/ari-w9500-display.ttf" id="3_b8iy7"]
 [ext_resource type="Theme" uid="uid://u4e86n2ats8n" path="res://assets/themes/menu.tres" id="3_ynd5l"]
 [ext_resource type="Script" uid="uid://cfet7lt7m44bm" path="res://scripts/ui/hover_panel.gd" id="4_script"]
 [ext_resource type="Script" uid="uid://c31akaeyqwx4b" path="res://scripts/ui/objective_panels.gd" id="6_script"]
+[ext_resource type="Script" uid="uid://cnsfpvry3qrh" path="res://scripts/ui/polarization_wheel.gd" id="7_wheel_script"]
+[ext_resource type="Texture2D" uid="uid://bm2s67yo7cyve" path="res://assets/filter-wheel.png" id="8_wheel_texture"]
 
 [sub_resource type="Theme" id="Theme_mfius"]
 Label/font_sizes/font_size = 33
@@ -82,7 +84,7 @@ size_flags_vertical = 0
 unique_name_in_owner = true
 visible = false
 z_index = 1
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -96,23 +98,39 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
 layout_mode = 2
-text = "Polarization"
+text = "Polarizing Filter"
 horizontal_alignment = 1
 
-[node name="Slider" type="HSlider" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
+[node name="WheelContainer" type="CenterContainer" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
 layout_mode = 2
-size_flags_horizontal = 3
-max_value = 179.0
-rounded = true
-tick_count = 7
+size_flags_vertical = 3
 
-[node name="Value" type="Label" parent="MarginContainer/FilterDialog/MarginContainer/VBox"]
+[node name="WheelControl" type="Control" parent="MarginContainer/FilterDialog/MarginContainer/VBox/WheelContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-text = "0"
+script = ExtResource("7_wheel_script")
+wheel_texture = ExtResource("8_wheel_texture")
+
+[node name="Value" type="Label" parent="MarginContainer/FilterDialog/MarginContainer/VBox/WheelContainer/WheelControl"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 20.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 20
+text = "0°"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="FinishDialog" type="PanelContainer" parent="MarginContainer"]
 unique_name_in_owner = true

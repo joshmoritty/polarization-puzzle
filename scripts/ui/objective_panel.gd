@@ -10,6 +10,10 @@ var _requirement_labels: Array[Label] = []
 func _init(p_sensor: Sensor = null) -> void:
 	sensor = p_sensor
 	top_level = true
+	
+	# Make the panel ignore mouse input so it doesn't interfere with game interaction
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
 	_build_structure()
 
 func _ready() -> void:
@@ -19,15 +23,18 @@ func _ready() -> void:
 func _build_structure() -> void:
 	# Create the internal structure
 	var margin := MarginContainer.new()
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore mouse input
 	add_child(margin)
 	
 	_vbox = VBoxContainer.new()
+	_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore mouse input
 	margin.add_child(_vbox)
 	
 	# Create Goal label
 	var goal_label := Label.new()
 	goal_label.text = "Goal"
 	goal_label.add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	goal_label.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore mouse input
 	var display_font = load("res://assets/fonts/ari-w9500-display.ttf")
 	goal_label.add_theme_font_override("font", display_font)
 	_vbox.add_child(goal_label)
@@ -39,6 +46,7 @@ func _build_structure() -> void:
 			var label := Label.new()
 			label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			label.custom_minimum_size = Vector2.ZERO
+			label.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore mouse input
 			_requirement_labels.append(label)
 			_vbox.add_child(label)
 	

@@ -13,7 +13,7 @@ var _hovered_original_materials: Array[Material] = []
 @onready var gui: CanvasLayer = %"GUI"
 @onready var hover_panel: PanelContainer = gui.get_node("%HoverPanel")
 @onready var filter_dialog: Control = gui.get_node("%FilterDialog")
-@onready var fd_slider: HSlider = filter_dialog.get_node("%Slider") as HSlider
+@onready var fd_wheel: Control = filter_dialog.get_node("%WheelControl")
 @onready var fd_value: Label = filter_dialog.get_node("%Value") as Label
 @onready var finish_dialog: PanelContainer = gui.get_node("%FinishDialog")
 @onready var finish_continue: Button = finish_dialog.get_node("%Continue")
@@ -137,25 +137,19 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _open_filter_dialog(f: Filter) -> void:
 	_active_filter = f
-	if fd_slider and fd_value and filter_dialog:
-		fd_slider.value = clampi(f.polar, 0, 179)
-		fd_value.text = str(int(fd_slider.value))
+	if fd_wheel and fd_value and filter_dialog:
+		fd_wheel.set_value(clampi(f.polar, 0, 179))
+		fd_value.text = str(f.polar) + "°"
 		if not filter_dialog.visible:
 			filter_dialog.visible = true
-		# Connect signals once
-		# Configure slider for integer steps and range
-		fd_slider.min_value = 0
-		fd_slider.max_value = 179
-		fd_slider.step = 1
-		fd_slider.rounded = true
-		# Connect once
-		if not fd_slider.value_changed.is_connected(_on_slider_changed):
-			fd_slider.value_changed.connect(_on_slider_changed)
+		# Connect signal once
+		if not fd_wheel.value_changed.is_connected(_on_wheel_changed):
+			fd_wheel.value_changed.connect(_on_wheel_changed)
 
-func _on_slider_changed(value: float) -> void:
+func _on_wheel_changed(value: int) -> void:
 	if _active_filter:
-		_active_filter.polar = int(value)
-		fd_value.text = str(int(value))
+		_active_filter.polar = value
+		fd_value.text = str(value) + "°"
 		_active_filter.build_beams()
 
 func _close_filter_dialog() -> void:

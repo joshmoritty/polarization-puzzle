@@ -11,7 +11,6 @@ var _hovered_sprites: Array[CanvasItem] = []
 @onready var view: SubViewport = %"SubViewport"
 @onready var gui: CanvasLayer = %"GUI"
 @onready var hover_panel: PanelContainer = gui.get_node("%HoverPanel")
-@onready var objectives_label: Label = gui.get_node("%Objectives")
 @onready var filter_dialog: Control = gui.get_node("%FilterDialog")
 @onready var fd_slider: HSlider = filter_dialog.get_node("%Slider") as HSlider
 @onready var fd_value: Label = filter_dialog.get_node("%Value") as Label
@@ -114,8 +113,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				to_outline.material = mat2
 				_hovered_sprites.append(to_outline)
 
-	# After input handling, update objectives each motion event for responsiveness
-	_update_objectives()
+	# After input handling, update objectives panel content/positions during motion
+	_update_objective_panels()
 
 	# Open/retarget filter dialog on left click
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -190,28 +189,20 @@ func register_obj(obj: Node2D):
 	objs.set(tilepos, obj)
 	return tilepos
 
-func _update_objectives():
-	if not objectives_label:
-		return
-	var all_reqs: Array[String] = []
+func _update_objective_panels():
 	var all_met := true
-	# Build objectives text from all Sensor requirements
 	for pos in objs:
 		var obj = objs[pos]
 		if obj is Sensor:
 			var sensor := obj as Sensor
 			var reqs := sensor.get_requirements()
 			for r in reqs:
-				all_reqs.append(r.format_summary())
-				var met := r.is_successful(sensor.beams_in)
-				if not met:
+				if not r.is_successful(sensor.beams_in):
 					all_met = false
-	var text := ""
-	if all_reqs.size() > 0:
-		text = "\n---\n".join(all_reqs)
-	objectives_label.text = text
-	if all_met and all_reqs.size() > 0:
+					break
+	if all_met and objs.size() > 0:
 		_show_finish_dialog()
+
 
 func _show_finish_dialog():
 	if finish_dialog and not finish_dialog.visible:

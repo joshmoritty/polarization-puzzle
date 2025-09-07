@@ -1,24 +1,42 @@
-[gd_scene load_steps=8 format=3 uid="uid://c33juruhhvftm"]
+[gd_scene load_steps=12 format=3 uid="uid://c33juruhhvftm"]
 
 [ext_resource type="FontFile" uid="uid://d4cwb3arurxll" path="res://assets/fonts/ari-w9500.ttf" id="1_ynd5l"]
 [ext_resource type="FontFile" uid="uid://g2fs3sapskof" path="res://assets/fonts/ari-w9500-display.ttf" id="3_b8iy7"]
 [ext_resource type="Theme" uid="uid://u4e86n2ats8n" path="res://assets/themes/menu.tres" id="3_ynd5l"]
 [ext_resource type="Script" uid="uid://cfet7lt7m44bm" path="res://scripts/ui/hover_panel.gd" id="4_script"]
+[ext_resource type="Script" uid="uid://ddnsswrp7adh" path="res://scripts/ui/objective_panel.gd" id="5_script"]
+[ext_resource type="Script" uid="uid://c31akaeyqwx4b" path="res://scripts/ui/objective_panels.gd" id="6_script"]
 
 [sub_resource type="Theme" id="Theme_mfius"]
 Label/font_sizes/font_size = 33
 Label/fonts/font = ExtResource("1_ynd5l")
 MarginContainer/constants/margin_bottom = 20
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynd5l"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08a8y"]
 bg_color = Color(0, 0, 0, 0.501961)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
 
-[sub_resource type="Theme" id="Theme_b8iy7"]
+[sub_resource type="Theme" id="Theme_4yt8u"]
 MarginContainer/constants/margin_bottom = 16
 MarginContainer/constants/margin_left = 16
 MarginContainer/constants/margin_right = 16
 MarginContainer/constants/margin_top = 16
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_ynd5l")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_08a8y")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p54wi"]
+bg_color = Color(0, 0, 0, 0.501961)
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="Theme" id="Theme_7yii4"]
+MarginContainer/constants/margin_bottom = 16
+MarginContainer/constants/margin_left = 16
+MarginContainer/constants/margin_right = 16
+MarginContainer/constants/margin_top = 16
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_p54wi")
 
 [node name="GUI" type="CanvasLayer"]
 
@@ -30,12 +48,41 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_mfius")
 
+[node name="ObjectivePanels" type="Control" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("6_script")
+
+[node name="ObjectivePanel" type="PanelContainer" parent="MarginContainer/ObjectivePanels"]
+visible = false
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = SubResource("Theme_4yt8u")
+script = ExtResource("5_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ObjectivePanels/ObjectivePanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ObjectivePanels/ObjectivePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/ObjectivePanels/ObjectivePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_fonts/font = ExtResource("3_b8iy7")
+text = "Goal"
+
+[node name="Objectives" type="Label" parent="MarginContainer/ObjectivePanels/ObjectivePanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+
 [node name="HoverPanel" type="PanelContainer" parent="MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
-theme = SubResource("Theme_b8iy7")
+theme = SubResource("Theme_7yii4")
 script = ExtResource("4_script")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HoverPanel"]
@@ -51,29 +98,6 @@ theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_b8iy7")
 
 [node name="HoverReadout" type="Label" parent="MarginContainer/HoverPanel/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 0
-
-[node name="ObjectivePanel" type="PanelContainer" parent="MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme = SubResource("Theme_b8iy7")
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ObjectivePanel"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ObjectivePanel/MarginContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/ObjectivePanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 0, 1)
-theme_override_fonts/font = ExtResource("3_b8iy7")
-text = "Goals"
-
-[node name="Objectives" type="Label" parent="MarginContainer/ObjectivePanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0

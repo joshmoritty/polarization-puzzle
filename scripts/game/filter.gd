@@ -18,5 +18,5 @@ func _process_light():
 
 	return lights_out
 
-func get_hover_info() -> String:
-	return "Polarization: %d°" % polar
+func get_hover_info() -> Array[Dictionary]:
+	return [ {"text": "Polarization: %d°" % polar, "color": Color.WHITE}]

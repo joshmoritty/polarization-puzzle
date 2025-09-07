@@ -38,12 +38,13 @@ static func dir_to_vec(d: Dir):
 			return Vector2i(-1, 0)
 	return Vector2i(0, 0)
 
-func format_readout() -> String:
+func format_readout() -> Dictionary:
 	var lines: Array[String] = []
-	lines.append("Color: %s" % LightColor.enum_to_string(color))
 	lines.append("Intensity: %.2f" % intensity)
 	lines.append("Polarization: %d°" % int(polar))
-	return "\n".join(lines)
+	var text := "\n".join(lines)
+	var display_color := LightColor.get_display_color(color)
+	return {"text": text, "color": display_color}
 
 func equals(data: LightData):
 	return (

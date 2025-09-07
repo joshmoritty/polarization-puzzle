@@ -79,5 +79,5 @@ func _ready() -> void:
 				collision_poly.position -= Vector2(bitmap.get_size()) / 2
 
 # Default hover info, subclasses override for richer details
-func get_hover_info() -> String:
-	return ""
+func get_hover_info() -> Array[Dictionary]:
+	return []

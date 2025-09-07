@@ -3,12 +3,13 @@ extends LightObject
 
 @export var dir: LightData.Dir
 
-func get_hover_info() -> String:
+func get_hover_info() -> Array[Dictionary]:
 	if beams_out.size() == 0:
-		return ""
+		return []
 	# Sort by light comparator and list all outgoing beams
 	beams_out.sort_custom(func(a, b): return LightData.compare(a.data, b.data))
-	var blocks: Array[String] = []
+	var entries: Array[Dictionary] = []
 	for b in beams_out:
-		blocks.append(b.data.format_readout())
-	return "\n---\n".join(blocks)
+		var readout = b.data.format_readout()
+		entries.append(readout)
+	return entries

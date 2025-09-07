@@ -33,5 +33,5 @@ func _process_light():
 
 	return lights_out
 
-func get_hover_info() -> String:
-	return ""
+func get_hover_info() -> Array[Dictionary]:
+	return []

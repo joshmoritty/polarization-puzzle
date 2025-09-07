@@ -1,31 +1,24 @@
-extends Node
-
-@onready var _template: PanelContainer = $ObjectivePanel
+extends Control
 
 func _ready() -> void:
-	# Ensure template exists and is hidden
-	if _template:
-		_template.visible = false
-		_template.top_level = true
 	_generate_panels()
 
 func _generate_panels() -> void:
-	if _template == null:
-		return
 	# Find all sensors in the scene
 	var sensors: Array[Node] = get_tree().get_root().find_children("*", "Sensor", true, false)
 	if sensors.is_empty():
 		return
-	# Remove previously generated panels (keep only the template)
+	
+	# Remove previously generated panels
 	for child in get_children():
-		if child != _template and child is PanelContainer and child.get_script() == _template.get_script():
+		if child is PanelContainer:
 			child.queue_free()
-	# For each sensor, create a panel clone and bind
+	
+	# For each sensor, create a new ObjectivePanel with the sensor as parameter
+	var objective_panel_script = preload("res://scripts/ui/objective_panel.gd")
 	for s in sensors:
-		var clone := _template.duplicate() as PanelContainer
-		add_child.call_deferred(clone)
-		clone.set_deferred("sensor", s)
-		clone.visible = true
+		var panel = objective_panel_script.new(s)
+		add_child.call_deferred(panel)
 
 func regenerate() -> void:
 	_generate_panels()

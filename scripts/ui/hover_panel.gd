@@ -2,6 +2,7 @@ extends PanelContainer
 
 @onready var name_label: Label = get_node("%HoverName")
 @onready var readout_label: Label = get_node("%HoverReadout")
+@onready var vbox: VBoxContainer = readout_label.get_parent()
 
 func _ready():
 	# Detach from container layout so we can freely position
@@ -22,48 +23,57 @@ func _process(_delta: float) -> void:
 	pos.y = clamp(pos.y, 8, vp.y - panel_size.y - 8)
 	global_position = pos
 
-func set_content(title: String, body: String) -> void:
+func set_content(title: String, colored_entries: Array[Dictionary]) -> void:
 	if name_label:
 		name_label.text = title
+		name_label.visible = title != ""
+	
+	# Clear existing dynamic labels (keep the original readout_label hidden)
 	if readout_label:
-		readout_label.visible = body != ""
-		readout_label.text = body
+		readout_label.visible = false
+	
+	# Remove any previously generated labels (but keep name_label and readout_label)
+	for child in vbox.get_children():
+		if child != readout_label and child != name_label and child is Label:
+			child.queue_free()
+	
+	# Add new colored labels by cloning the readout_label
+	for entry in colored_entries:
+		var label := readout_label.duplicate() as Label
+		label.text = entry["text"]
+		label.modulate = entry["color"]
+		label.visible = true
+		vbox.add_child(label)
 
 func update_from_selection(selected_objs: Array, selected_beams: Array) -> void:
 	var any_hover := selected_objs.size() > 0 or selected_beams.size() > 0
 	visible = any_hover
 	if not any_hover:
-		set_content("", "")
+		set_content("", [])
 		return
 
 	var title := ""
-	var body := ""
+	var colored_entries: Array[Dictionary] = []
 
 	# Determine object title and object text first (top-most object wins)
 	if selected_objs.size() > 0:
 		var top_obj: Node = selected_objs[0]
 		title = _get_obj_display_name(top_obj)
 		if top_obj and top_obj.has_method("get_hover_info"):
-			var obj_txt: String = top_obj.get_hover_info()
-			if obj_txt != "":
-				body = obj_txt
+			var obj_entries = top_obj.get_hover_info()
+			colored_entries.append_array(obj_entries)
 	elif selected_beams.size() > 0:
 		title = "Light"
 
-	# Append beam sections from same position, sorted and joined
+	# Append beam sections from same position, sorted
 	if selected_beams.size() > 0:
 		selected_beams.sort_custom(func(a, b): return LightData.compare(a.beam.data, b.beam.data))
-		var lines: Array[String] = []
 		for bs in selected_beams:
-			var s: String = bs.get_hover_info()
-			if s != "":
-				lines.append(s)
-		if lines.size() > 0:
-			if body != "":
-				body += "\n\n"
-			body += "\n---\n".join(lines)
+			if bs and bs.has_method("get_hover_info"):
+				var beam_entries = bs.get_hover_info()
+				colored_entries.append_array(beam_entries)
 
-	set_content(title, body)
+	set_content(title, colored_entries)
 
 func _get_obj_display_name(top_obj: Node) -> String:
 	if top_obj is Filter:

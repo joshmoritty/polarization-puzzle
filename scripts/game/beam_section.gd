@@ -35,7 +35,8 @@ func _ready() -> void:
 	if beam.data.dir == LightData.Dir.UP_RIGHT or beam.data.dir == LightData.Dir.DOWN_LEFT:
 		area.scale.x = -1
 
-func get_hover_info() -> String:
+func get_hover_info() -> Array[Dictionary]:
 	if beam and beam.data:
-		return beam.data.format_readout()
-	return ""
+		var readout = beam.data.format_readout()
+		return [readout]
+	return []

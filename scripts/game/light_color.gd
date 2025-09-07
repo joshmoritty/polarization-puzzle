@@ -44,3 +44,18 @@ static func enum_to_string(e: LightColorEnum):
 			return "Blue"
 		LightColorEnum.PURPLE:
 			return "Purple"
+
+static func get_display_color(light_color: LightColorEnum) -> Color:
+	match light_color:
+		LightColorEnum.RED:
+			return Color(1.0, 0.5, 0.5) # Light red
+		LightColorEnum.YELLOW:
+			return Color(1.0, 1.0, 0.6) # Light yellow
+		LightColorEnum.GREEN:
+			return Color(0.6, 1.0, 0.6) # Light green
+		LightColorEnum.BLUE:
+			return Color(0.6, 0.8, 1.0) # Light blue
+		LightColorEnum.PURPLE:
+			return Color(1.0, 0.6, 1.0) # Light purple
+		_:
+			return Color.WHITE

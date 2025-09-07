@@ -48,13 +48,17 @@ func is_successful(beams: Array[Beam]) -> bool:
 		return total_intensity >= min_intensity
 	return false
 
-func format_summary() -> String:
+func get_summary() -> Dictionary:
 	var lines: Array[String] = []
-	var color_str: String = "Any" if not use_color else LightColor.enum_to_string(color)
-	lines.append("Color: %s" % color_str)
 	var intensity_label = "Total Intensity" if use_total_intensity else "Intensity"
 	if min_intensity > 0.0001:
 		lines.append("%s: >= %.2f" % [intensity_label, min_intensity])
 	var polar_str := "Any" if not use_polar else "%d°-%d°" % [min_polar, max_polar]
 	lines.append("Polarization: %s" % polar_str)
-	return "\n".join(lines)
+	var text := "\n".join(lines)
+	
+	var display_color: Color = Color.WHITE
+	if use_color:
+		display_color = LightColor.get_display_color(color)
+	
+	return {"text": text, "color": display_color}

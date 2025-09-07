@@ -45,15 +45,16 @@ func get_requirements() -> Array[Requirement]:
 		reqs.append(r3)
 	return reqs
 
-func get_hover_info() -> String:
+func get_hover_info() -> Array[Dictionary]:
 	if beams_in.size() == 0:
-		return "No Input"
+		return [ {"text": "No Input", "color": Color.WHITE}]
 	
 	beams_in.sort_custom(func(a, b): return LightData.compare(a.data, b.data))
 
-	var blocks: Array[String] = []
+	var entries: Array[Dictionary] = []
 	for b in beams_in:
 		if b.data.dir == dir:
-			blocks.append(b.data.format_readout())
+			var readout = b.data.format_readout()
+			entries.append(readout)
 	
-	return "\n---\n".join(blocks)
+	return entries

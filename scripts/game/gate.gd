@@ -65,13 +65,13 @@ func get_hover_info() -> Array[Dictionary]:
 	entries.append({"text": "Requires:", "color": Color.WHITE})
 	# Requirement 1 summary
 	var r1_req := Requirement.new(req_1_dir, req_1_color, req_1_min_intensity, req_1_min_polar, req_1_max_polar, false)
-	var r1_summary = r1_req.get_summary()
+	var r1_summary = r1_req.get_summary(beams_in)
 	r1_summary["text"] = "Direction: %s\n%s" % [LightData.dir_to_string(req_1_dir), r1_summary["text"]]
 	entries.append(r1_summary)
 	# Requirement 2 if used
 	if req_2_used:
 		var r2_req := Requirement.new(req_2_dir, req_2_color, req_2_min_intensity, req_2_min_polar, req_2_max_polar, false)
-		var r2_summary = r2_req.get_summary()
+		var r2_summary = r2_req.get_summary(beams_in)
 		r2_summary["text"] = "Direction: %s\n%s" % [LightData.dir_to_string(req_2_dir), r2_summary["text"]]
 		entries.append(r2_summary)
 	return entries

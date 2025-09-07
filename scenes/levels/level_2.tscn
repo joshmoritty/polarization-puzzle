@@ -130,6 +130,7 @@ texture = ExtResource("9_gw1l3")
 script = ExtResource("10_lkn2k")
 dir = 2
 use_polar = false
+objective_panel_on_left = true
 req_1_color = 3
 req_1_min_intensity = 0.95
 

@@ -10,6 +10,9 @@ extends LightObject
 @export var use_color: bool = true
 @export var use_polar: bool = true
 
+@export_group("UI")
+@export var objective_panel_on_left: bool = false
+
 @export_group("Requirement 1")
 @export var req_1_color: LightColor.LightColorEnum
 @export var req_1_min_intensity: float

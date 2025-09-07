@@ -142,6 +142,7 @@ script = ExtResource("10_0n65g")
 dir = 1
 min_polar = 40
 max_polar = 60
+objective_panel_on_left = true
 req_1_color = 4
 req_1_min_intensity = 0.7
 

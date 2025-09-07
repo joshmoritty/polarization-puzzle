@@ -1,3 +1,4 @@
+class_name ObjectivePanel
 extends PanelContainer
 
 var sensor: Sensor
@@ -40,6 +41,9 @@ func _build_structure() -> void:
 			label.custom_minimum_size = Vector2.ZERO
 			_requirement_labels.append(label)
 			_vbox.add_child(label)
+	
+	# Set up corner styling based on sensor position preference
+	_setup_corner_styling()
 
 func _process(_dt: float) -> void:
 	if sensor == null:
@@ -53,10 +57,16 @@ func _process(_dt: float) -> void:
 	# Size to content each frame
 	size = get_combined_minimum_size()
 
-	# Position so that the bottom-left of the panel sits at the sensor's screen position
+	# Position based on sensor's preference (left or right side)
 	var canvas_xform: Transform2D = get_viewport().get_canvas_transform()
 	var sensor_screen: Vector2 = canvas_xform * sensor.global_position
-	global_position = sensor_screen - Vector2(0, size.y) + screen_offset
+	
+	if sensor.objective_panel_on_left:
+		# Position to the left of the sensor (bottom-left corner of panel at sensor position)
+		global_position = sensor_screen - Vector2(size.x, size.y) + screen_offset
+	else:
+		# Position to the right of the sensor (bottom-right corner of panel at sensor position)
+		global_position = sensor_screen - Vector2(0, size.y) + screen_offset
 
 func _update_requirements() -> void:
 	if not _vbox or not sensor:
@@ -69,3 +79,28 @@ func _update_requirements() -> void:
 			var req_summary = reqs[i].get_summary(sensor.beams_in)
 			_requirement_labels[i].text = req_summary["text"]
 			_requirement_labels[i].modulate = req_summary["color"]
+
+func _setup_corner_styling() -> void:
+	if not sensor:
+		return
+	
+	# Create a custom StyleBoxFlat for different corner configurations
+	var style_box := StyleBoxFlat.new()
+	style_box.bg_color = Color(0, 0, 0, 0.501961) # Match existing panel color
+	
+	# Set corner radius based on position
+	if sensor.objective_panel_on_left:
+		# Panel on left: rounded corners except bottom-right
+		style_box.corner_radius_top_left = 16
+		style_box.corner_radius_top_right = 16
+		style_box.corner_radius_bottom_left = 16
+		style_box.corner_radius_bottom_right = 0
+	else:
+		# Panel on right: rounded corners except bottom-left
+		style_box.corner_radius_top_left = 16
+		style_box.corner_radius_top_right = 16
+		style_box.corner_radius_bottom_left = 0
+		style_box.corner_radius_bottom_right = 16
+	
+	# Apply the custom style
+	add_theme_stylebox_override("panel", style_box)

@@ -208,6 +208,9 @@ func _update_objective_panels():
 
 func _show_finish_dialog():
 	if finish_dialog and not finish_dialog.visible:
+		# Hide the "Continue" button if there's no next level
+		if finish_continue:
+			finish_continue.visible = next_level != null
 		finish_dialog.visible = true
 
 func _on_finish_continue():

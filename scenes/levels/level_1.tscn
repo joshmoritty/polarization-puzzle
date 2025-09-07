@@ -99,7 +99,7 @@ offset_bottom = 137.0
 theme = ExtResource("5_mm8aj")
 theme_override_font_sizes/font_size = 22
 text = "Try hovering on objects and light beams to view their info.
-Click and drag to move the view, scroll/+- keys to zoom.
+Click and drag/arrow keys to pan, scroll/+- keys to zoom.
 Click the highlighted Polarizing Filter to interact with it.
 Change the Polarizing Filters to complete the Goal."
 

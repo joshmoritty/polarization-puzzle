@@ -21,6 +21,9 @@ var _hovered_original_materials: Array[Material] = []
 @export var next_level: PackedScene
 
 func _ready():
+	# Add to controller group for camera reference
+	add_to_group("controller")
+	
 	for i in range(25):
 		beams_used.push_back(false)
 		

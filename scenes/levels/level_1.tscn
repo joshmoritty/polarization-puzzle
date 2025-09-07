@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=4 uid="uid://c2bso81u5xov"]
+[gd_scene load_steps=17 format=4 uid="uid://c2bso81u5xov"]
 
 [ext_resource type="Script" uid="uid://buo0k0a1ucb80" path="res://scripts/game/controller.gd" id="1_7gny6"]
 [ext_resource type="PackedScene" uid="uid://c33juruhhvftm" path="res://scenes/gui.tscn" id="2_2os1m"]
 [ext_resource type="PackedScene" uid="uid://m30priism7yw" path="res://scenes/levels/level_2.tscn" id="2_dnkej"]
 [ext_resource type="Script" uid="uid://pjnf8tkpi0ks" path="res://scripts/game/gui.gd" id="3_1s4pk"]
 [ext_resource type="PackedScene" uid="uid://c5jeh6aawd8mg" path="res://scenes/sub_viewport.tscn" id="4_go7sj"]
+[ext_resource type="Theme" uid="uid://u4e86n2ats8n" path="res://assets/themes/menu.tres" id="5_mm8aj"]
 [ext_resource type="Texture2D" uid="uid://yuoce8fhr0w0" path="res://assets/isometric-sandbox-sheet.png" id="6_x2xxo"]
 [ext_resource type="Texture2D" uid="uid://kum6enib4nis" path="res://assets/object_sprites/source_1.png" id="7_2cbcq"]
 [ext_resource type="Script" uid="uid://dn6ueyc8url7j" path="res://scripts/game/multi_source.gd" id="8_isj1j"]
@@ -87,6 +88,20 @@ next_level = ExtResource("2_dnkej")
 unique_name_in_owner = true
 visible = false
 script = ExtResource("3_1s4pk")
+
+[node name="Tutorial" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="Tutorial"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 572.0
+offset_bottom = 137.0
+theme = ExtResource("5_mm8aj")
+theme_override_font_sizes/font_size = 22
+text = "Try hovering on objects and light beams to view their info.
+Click and drag to move the view, scroll to zoom.
+Click the highlighted Polarizing Filter to interact with it.
+Change the Polarizing Filters to complete the Goal and win the level."
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(160, 90)

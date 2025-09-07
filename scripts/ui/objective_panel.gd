@@ -6,6 +6,7 @@ var sensor: Sensor
 
 var _vbox: VBoxContainer
 var _requirement_labels: Array[Label] = []
+var _initial_position_set: bool = false
 
 func _init(p_sensor: Sensor = null) -> void:
 	sensor = p_sensor
@@ -13,6 +14,9 @@ func _init(p_sensor: Sensor = null) -> void:
 	
 	# Make the panel ignore mouse input so it doesn't interfere with game interaction
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Start invisible to prevent flash at (0,0) before positioning
+	visible = false
 	
 	_build_structure()
 
@@ -56,8 +60,8 @@ func _build_structure() -> void:
 func _process(_dt: float) -> void:
 	if sensor == null:
 		visible = false
+		_initial_position_set = false
 		return
-	visible = true
 
 	# Update requirements every frame for real-time checkbox updates
 	_update_requirements()
@@ -69,12 +73,19 @@ func _process(_dt: float) -> void:
 	var canvas_xform: Transform2D = get_viewport().get_canvas_transform()
 	var sensor_screen: Vector2 = canvas_xform * sensor.global_position
 	
-	if sensor.objective_panel_on_left:
-		# Position to the left of the sensor (bottom-left corner of panel at sensor position)
-		global_position = sensor_screen - Vector2(size.x, size.y) + screen_offset
-	else:
-		# Position to the right of the sensor (bottom-right corner of panel at sensor position)
-		global_position = sensor_screen - Vector2(0, size.y) + screen_offset
+	# Only position and show if we have valid screen coordinates
+	if sensor_screen != Vector2.ZERO or sensor.global_position != Vector2.ZERO:
+		if sensor.objective_panel_on_left:
+			# Position to the left of the sensor (bottom-left corner of panel at sensor position)
+			global_position = sensor_screen - Vector2(size.x, size.y) + screen_offset
+		else:
+			# Position to the right of the sensor (bottom-right corner of panel at sensor position)
+			global_position = sensor_screen - Vector2(0, size.y) + screen_offset
+		
+		# Only make visible after position has been calculated to prevent flash at (0,0)
+		if not _initial_position_set:
+			_initial_position_set = true
+			visible = true
 
 func _update_requirements() -> void:
 	if not _vbox or not sensor:

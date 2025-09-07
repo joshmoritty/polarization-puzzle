@@ -65,6 +65,7 @@ script = ExtResource("4_wu84c")
 
 [node name="LevelSelector" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("7_level_selector_script")
 

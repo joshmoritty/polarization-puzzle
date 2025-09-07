@@ -91,4 +91,5 @@ func delete():
 		section.queue_free()
 	sections = []
 	end_obj.beams_in.erase(self)
+	end_obj.build_beams()
 	controller.free_mesh_coord(mesh_coord)

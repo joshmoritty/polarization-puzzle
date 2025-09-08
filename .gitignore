@@ -4,3 +4,9 @@
 
 # VSCode
 .vscode/
+
+# Export
+export/
+
+# MacOS
+.DS_Store

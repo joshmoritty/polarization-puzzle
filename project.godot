@@ -15,6 +15,10 @@ run/main_scene="uid://cdk1k0f0rcwuj"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="uid://bm2s67yo7cyve"
 
+[autoload]
+
+SceneManager="*res://scripts/game/scene_manager.gd"
+
 [debug]
 
 gdscript/warnings/integer_division=0

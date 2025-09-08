@@ -42,7 +42,7 @@ func _setup_level_buttons():
 
 func _load_level(level_index: int):
 	if level_index >= 0 and level_index < level_scenes.size():
-		get_tree().change_scene_to_file(level_scenes[level_index])
+		SceneManager.change_scene_with_loading(level_scenes[level_index])
 
 func _on_back_pressed():
 	hide_level_selector()

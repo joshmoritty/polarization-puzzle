@@ -234,12 +234,15 @@ func _show_finish_dialog():
 func _on_finish_continue():
 	if finish_dialog:
 		finish_dialog.visible = false
-		get_tree().change_scene_to_packed(next_level)
+		if next_level:
+			SceneManager.change_scene_with_loading(next_level.resource_path)
+		else:
+			SceneManager.change_scene_with_loading("res://scenes/main_menu.tscn")
 
 func _on_finish_main_menu():
 	if finish_dialog:
 		finish_dialog.visible = false
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		SceneManager.change_scene_with_loading("res://scenes/main_menu.tscn")
 
 func _show_exit_confirmation():
 	if exit_confirmation_dialog and not exit_confirmation_dialog.visible:
@@ -248,7 +251,7 @@ func _show_exit_confirmation():
 func _on_exit_confirm():
 	if exit_confirmation_dialog:
 		exit_confirmation_dialog.visible = false
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		SceneManager.change_scene_with_loading("res://scenes/main_menu.tscn")
 
 func _on_exit_cancel():
 	if exit_confirmation_dialog:

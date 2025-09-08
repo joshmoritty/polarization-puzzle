@@ -66,8 +66,12 @@ func _on_gui_input(event: InputEvent):
 				if distance <= radius:
 					is_dragging = true
 					last_mouse_pos = local_pos # Store initial position, but don't change angle yet
+					# Show hover outline when dragging starts
+					material = _hover_outline_material
 			else:
 				is_dragging = false
+				# Update outline based on current hover state when dragging stops
+				_update_outline_material()
 	elif event is InputEventMouseMotion and is_dragging:
 		var motion_event = event as InputEventMouseMotion
 		_update_value_from_mouse_delta(motion_event.position)
@@ -144,10 +148,19 @@ func _draw():
 
 func _on_mouse_entered():
 	_is_hovered = true
-	# Switch to hover outline (2d_outline)
-	material = _hover_outline_material
+	# Update outline material based on current state
+	_update_outline_material()
 
 func _on_mouse_exited():
 	_is_hovered = false
-	# Switch back to filter outline
-	material = _filter_outline_material
+	# Update outline material based on current state
+	_update_outline_material()
+
+# Helper function to update the outline material based on current state
+func _update_outline_material():
+	if is_dragging or _is_hovered:
+		# Show hover outline when dragging or hovering
+		material = _hover_outline_material
+	else:
+		# Show filter outline when neither dragging nor hovering
+		material = _filter_outline_material

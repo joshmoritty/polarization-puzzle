@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
-uniform float thickness: hint_range(0.0, 5.0) = 1.0;
-uniform float pulse_speed: hint_range(0.1, 10.0) = 5.0;
+const float thickness = 1.0;
+const float pulse_speed = 5.0;
 
 float is_solid(float value) {
 	return max(0.0, sign(value));

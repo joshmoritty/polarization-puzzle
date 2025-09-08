@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
-uniform vec4 color: source_color = vec4(1.0, 1.0, 1.0, 1.0);
-uniform float thickness: hint_range(0.0, 5.0) = 1.0;
+const vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+const float thickness = 1.0;
 
 float is_solid(float value) {
 	return max(0.0, sign(value));

@@ -1,16 +1,16 @@
 shader_type spatial;
 render_mode blend_mix, cull_disabled, unshaded;
 
-uniform float wavelength = 0.443;     // world units per cycle (mesh-relative)
+const float wavelength = 0.443;     // world units per cycle (mesh-relative)
 instance uniform float amplitude = 0.4;     // wave height (in UV units vertically)
-uniform float speed = 10.0;          // animation speed
+const float speed = 10.0;          // animation speed
 
 instance uniform vec4 wave_color      : source_color = vec4(1.0, 1.0, 0.0, 1.0); // sine wave
 instance uniform vec4 connector_color : source_color = vec4(1.0, 0.75, 0.0, 1.0); // vertical connectors
 instance uniform vec4 axis_color      : source_color = vec4(1.0, 0.75, 0.0, 1.0); // horizontal axis
 
-uniform float pixel_thickness = 0.5; // thickness in screen pixels
-uniform int connector_n = 4;         // number of connectors per wavelength
+const float pixel_thickness = 0.5; // thickness in screen pixels
+const int connector_n = 4;         // number of connectors per wavelength
 
 varying vec3 vertex_local;
 

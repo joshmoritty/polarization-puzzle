@@ -18,6 +18,9 @@ var _hovered_original_materials: Array[Material] = []
 @onready var finish_dialog: PanelContainer = gui.get_node("%FinishDialog")
 @onready var finish_continue: Button = finish_dialog.get_node("%Continue")
 @onready var finish_main_menu: Button = finish_dialog.get_node("%MainMenu")
+@onready var exit_confirmation_dialog: PanelContainer = gui.get_node("%ExitConfirmationDialog")
+@onready var exit_confirm_button: Button = exit_confirmation_dialog.get_node("%ConfirmExit")
+@onready var exit_cancel_button: Button = exit_confirmation_dialog.get_node("%CancelExit")
 @export var next_level: PackedScene
 
 func _ready():
@@ -37,8 +40,19 @@ func _ready():
 		finish_continue.pressed.connect(_on_finish_continue)
 	if finish_main_menu and not finish_main_menu.pressed.is_connected(_on_finish_main_menu):
 		finish_main_menu.pressed.connect(_on_finish_main_menu)
+	
+	# Connect exit confirmation dialog buttons
+	if exit_confirm_button and not exit_confirm_button.pressed.is_connected(_on_exit_confirm):
+		exit_confirm_button.pressed.connect(_on_exit_confirm)
+	if exit_cancel_button and not exit_cancel_button.pressed.is_connected(_on_exit_cancel):
+		exit_cancel_button.pressed.connect(_on_exit_cancel)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Handle escape key to show exit confirmation
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		_show_exit_confirmation()
+		return
+	
 	# When dialog open, suppress hover readout and allow outside-click close
 	if filter_dialog and filter_dialog.visible:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -48,6 +62,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		# Hide hover panel when dialog is open
 		if hover_panel:
 			hover_panel.visible = false
+		return
+	
+	# Don't process other input when exit confirmation is visible
+	if exit_confirmation_dialog and exit_confirmation_dialog.visible:
 		return
 
 	# Update UI readout on hover via physics point query; delegate to HoverPanel
@@ -222,3 +240,16 @@ func _on_finish_main_menu():
 	if finish_dialog:
 		finish_dialog.visible = false
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _show_exit_confirmation():
+	if exit_confirmation_dialog and not exit_confirmation_dialog.visible:
+		exit_confirmation_dialog.visible = true
+
+func _on_exit_confirm():
+	if exit_confirmation_dialog:
+		exit_confirmation_dialog.visible = false
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_exit_cancel():
+	if exit_confirmation_dialog:
+		exit_confirmation_dialog.visible = false

@@ -90,7 +90,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					elif parent is LightObject:
 						selected_objs.append(parent)
 		# Delegate building and displaying content to HoverPanel
-		(hover_panel as Node).call_deferred("update_from_selection", selected_objs, selected_beams)
+		hover_panel.update_from_selection(selected_objs, selected_beams)
 
 		# Apply/remove outline shader: outline all selected beam sections; otherwise top-most item
 		# Clear previous outlines and restore original materials
